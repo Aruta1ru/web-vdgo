@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+/genv
+/vdgo_backend/media
+sql/web_vdgo_bypass.sql
+sql/web_vdgo_client.sql
+sql/web_vdgo_executor.sql
+sql/web_vdgo_ob_prev.sql
+sql/web_vdgo_ob.sql
+sql/web_vdgo_unit.sql
