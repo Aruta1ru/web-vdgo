@@ -253,48 +253,34 @@ class EquipmentInfo(models.Model):
                                   db_column='id_st',
                                   related_name='info',
                                   verbose_name='Оборудование')
-    eyeliner_type = models.BooleanField('Вид подводки',
-                                        db_column='podvod')
+    eyeliner_type = models.BooleanField('Вид подводки')
     factory_num = models.CharField('Заводской №',
-                                   max_length=32,
-                                   db_column='z_num')
-    burners_num = models.SmallIntegerField('Количество конфорок',
-                                           db_column='k_count')
-    power = models.FloatField('Мощность',
-                              db_column='Pwr')
-    lifetime = models.SmallIntegerField('Срок эксплуатации',
-                                        db_column='Expl')
-    extra_info = models.TextField('Дополнительная информация',
-                                  db_column='dopinf')
-    install_date = models.DateTimeField('Дата установки',
-                                        db_column='d_ust')
-    shutdown_date = models.DateTimeField('Дата отключения',
-                                         db_column='d_otkl')
+                                   max_length=32)
+    burners_num = models.SmallIntegerField('Количество конфорок')
+    power = models.FloatField('Мощность')
+    lifetime = models.SmallIntegerField('Срок эксплуатации')
+    extra_info = models.TextField('Дополнительная информация')
+    install_date = models.DateTimeField('Дата установки')
+    shutdown_date = models.DateTimeField('Дата отключения')
     camera_type = models.SmallIntegerField('Тип камеры',
-                                           choices=CameraType.choices,
-                                           db_column='tip_kam')
+                                           choices=CameraType.choices)
     install_location = models.SmallIntegerField(
         'Место установки',
-        choices=InstallLocation.choices,
-        db_column='m_ust'
+        choices=InstallLocation.choices
     )
-    meter_value = models.IntegerField('Показание счетчика',
-                                      db_column='pokaz')
-    reading_date = models.DateTimeField('Дата показаний',
-                                        db_column='d_pokaz')
+    meter_value = models.IntegerField('Показание счетчика')
+    reading_date = models.DateTimeField('Дата показаний')
     valve_presence = models.BooleanField('Наличие клапана',
-                                         db_column='klapan',
                                          default=False)
     controlled_env = models.SmallIntegerField('Контролируемая среда',
-                                              choices=ControlledEnv.choices,
-                                              db_column='kontr_sr')
+                                              choices=ControlledEnv.choices)
 
     def __str__(self):
         return f'{self.equipment} - {self.manufacturer} | {self.model}'
 
     class Meta:
         managed = False
-        db_table = 'vdg_param'
+        db_table = 'web_vdgo_equipment_info'
         verbose_name = 'Информация об оборудовании'
         verbose_name_plural = 'Информация об оборудовании'
 
@@ -302,7 +288,12 @@ class EquipmentInfo(models.Model):
 class EquipmentInfoPrev(models.Model):
     id = models.IntegerField('ID',
                              primary_key=True,
-                             db_column='id_st')
+                             db_column='id_param')
+    equipment = models.ForeignKey('Equipment',
+                                  on_delete=models.PROTECT,
+                                  db_column='id_st',
+                                  related_name='previous',
+                                  verbose_name='Оборудование')
     prev_manufacturer = models.CharField('Изготовитель',
                                          max_length=80,
                                          db_column='name_izg')
@@ -345,9 +336,11 @@ class FileInfo(models.Model):
                                on_delete=models.PROTECT,
                                db_column='id_bypass',
                                related_name='files',
-                               verbose_name='ВДГО')
+                               verbose_name='ВДГО',
+                               default=0)
     bypass_date = models.DateField('Дата ВДГО',
-                                   db_column='bypass_date')
+                                   db_column='bypass_date',
+                                   null=True)
     is_deleted = models.BooleanField('Файл удален?',
                                      default=False,
                                      db_column='deleted')

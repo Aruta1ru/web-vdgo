@@ -88,7 +88,7 @@ class User(AbstractUser):
                             choices=ROLES,
                             default=USER)
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['last_name']
+    REQUIRED_FIELDS = ['executor', 'branch']
     objects = UserManager()
 
     def __str__(self):

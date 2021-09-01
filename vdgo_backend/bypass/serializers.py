@@ -33,6 +33,15 @@ class ObjectBypassSerializer(BypassSerializer):
         depth = 1
 
 
+class VdgoObjectCommonSerializer(serializers.ModelSerializer):
+    clients = ClientSerializer(many=True, read_only=True)
+    bypasses = ObjectBypassSerializer(many=True, read_only=True)
+
+    class Meta:
+        fields = '__all__'
+        model = models.VdgoObject
+
+
 class ManufacturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Manufacturer
@@ -47,8 +56,8 @@ class EquipmentModelSerializer(serializers.ModelSerializer):
 
 class EquipmentInfoPrevSerializer(serializers.ModelSerializer):
     class Meta:
+        exclude = ('equipment',)
         model = models.EquipmentInfoPrev
-        fields = ('__all__')
 
 
 class EquipmentInfoSerializer(serializers.ModelSerializer):
@@ -59,6 +68,9 @@ class EquipmentInfoSerializer(serializers.ModelSerializer):
 
 
 class EquipmentSerializer(serializers.ModelSerializer):
+    info = EquipmentInfoSerializer(many=True)
+    previous = EquipmentInfoPrevSerializer(many=True)
+
     class Meta:
         exclude = ('object',)
         model = models.Equipment
@@ -67,7 +79,18 @@ class EquipmentSerializer(serializers.ModelSerializer):
 
 class FileSerializer(serializers.ModelSerializer):
     class Meta:
-        exclude = ('file_num', 'user_add', 'date_add', 'is_deleted')
+        fields = (
+            'id', 'filename', 'file_category', 'file_size',
+            'bypass', 'bypass_date', 'object'
+        )
+        model = models.FileInfo
+
+
+class ITDLoadSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = (
+            'id', 'filename', 'file_category', 'file_size', 'object'
+        )
         model = models.FileInfo
 
 
@@ -79,7 +102,7 @@ class BypassBufferSerializer(serializers.ModelSerializer):
 
 class EquipmentInfoBufferSerializer(serializers.ModelSerializer):
     class Meta:
-        exclude = ('id',)
+        fields = '__all__'
         model = models.EquipmentInfoBuffer
 
 
