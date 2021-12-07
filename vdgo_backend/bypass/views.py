@@ -1,8 +1,10 @@
 import os
+from wsgiref.util import FileWrapper
 
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import mixins, status, viewsets
@@ -11,6 +13,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
 
 from . import filters, models, serializers
 
@@ -135,12 +138,25 @@ class EquipmentModelViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.EquipmentModel.objects.all()
     serializer_class = serializers.EquipmentModelSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.EquipmentModelFilter
     pagination_class = None
 
 
 class UndoneReasonViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = models.UndoneReason.objects.all()
     serializer_class = serializers.UndoneReasonSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+
+
+class EquipmentTypeViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.EquipmentType.objects.filter(
+        id__in=[
+            30, 35, 257, 41, 273, 275, 274, 277, 276, 39, 272, 271, 47, 48
+        ]
+    )
+    serializer_class = serializers.EquipmentTypeSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = None
 
@@ -190,12 +206,49 @@ class FileViewSet(mixins.ListModelMixin,
     parser_classes = (MultiPartParser,)
     pagination_class = None
 
+    @swagger_auto_schema(operation_description="Получить файл объекта",
+                         responses={404: 'Файл не обнаружен'})
+    @action(['get'], detail=True, permission_classes=[IsAuthenticated])
+    def get_file(self, request, pk):
+        file_record = get_object_or_404(models.FileInfo, pk=pk)
+        file_path = os.path.join(
+            settings.MEDIA_ROOT,
+            str(file_record.object.id),
+            str(file_record.filename)
+        )
+        if not os.path.exists(file_path):
+            file_record.is_deleted = True
+            file_record.save()
+            return Response(
+                {'error': (f'Файл {file_record.filename} '
+                           'не обнаружен в директории!')},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        index = str(file_record.filename).find('.')
+        extension = str(file_record.filename)[index + 1:].lower()
+        if extension in ['jpeg', 'jpg', 'png', 'tiff']:
+            if extension == 'jpg':
+                extension = 'jpeg'
+            content_type = f'image/{extension}'
+        else:
+            content_type = 'application/pdf'
+        file_path = os.path.join(
+            settings.MEDIA_ROOT,
+            str(file_record.object.id),
+            str(file_record.filename)
+        )
+        file = open(file_path, 'rb')
+        return HttpResponse(FileWrapper(file),
+                            content_type=content_type)
+
+    @swagger_auto_schema(operation_description="Удалить файл объекта",
+                         responses={404: 'Файл не обнаружен'})
     def destroy(self, request, pk):
         file_record = get_object_or_404(models.FileInfo, pk=pk)
         if file_record.is_deleted:
             return Response(
                 {'error': f'Файл {file_record.filename} уже был удален!'},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_404_NOT_FOUND
             )
         file_path = os.path.join(
             settings.MEDIA_ROOT,
@@ -208,7 +261,7 @@ class FileViewSet(mixins.ListModelMixin,
             return Response(
                 {'error': (f'Файл {file_record.filename} '
                            'не обнаружен в директории!')},
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_404_NOT_FOUND
             )
         try:
             os.remove(file_path)

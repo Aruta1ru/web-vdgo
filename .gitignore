@@ -130,6 +130,7 @@ dmypy.json
 
 /genv
 /vdgo_backend/media
+/node_modules
 sql/web_vdgo_bypass.sql
 sql/web_vdgo_client.sql
 sql/web_vdgo_executor.sql

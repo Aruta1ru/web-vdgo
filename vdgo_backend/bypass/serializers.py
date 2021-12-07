@@ -67,6 +67,12 @@ class EquipmentInfoSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class EquipmentTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = models.EquipmentType
+
+
 class EquipmentSerializer(serializers.ModelSerializer):
     info = EquipmentInfoSerializer(many=True)
     previous = EquipmentInfoPrevSerializer(many=True)

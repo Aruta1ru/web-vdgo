@@ -16,6 +16,9 @@ router.register('undone-reasons',
                 basename='undone_reasons')
 router.register('vdg_objects', views.VdgoObjectViewSet, basename='vdg_objects')
 router.register('equipment', views.EquipmentViewSet, basename='equipment')
+router.register('equipment-types',
+                views.EquipmentTypeViewSet,
+                basename='equipment-types')
 router.register('files', views.FileViewSet, basename='files')
 
 

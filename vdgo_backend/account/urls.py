@@ -6,6 +6,8 @@ from . import views
 
 router = DefaultRouter()
 router.register('users', views.UserViewSet, basename='users')
+router.register('units', views.UnitViewSet, basename='units')
+router.register('executors', views.ExecutorViewSet, basename='executors')
 
 urlpatterns = [
     path('v1/token/',

@@ -5,17 +5,6 @@ from django.utils.translation import gettext_lazy as _
 from .managers import UserManager
 
 
-class MainBranch(models.IntegerChoices):
-    BRANCH0 = 0, _('Не указан')
-    BRANCH1 = 1, _('Филиал №1 в г.Дзержинск')
-    BRANCH2 = 2, _('Филиал №2 в г.Арзамас')
-    BRANCH3 = 3, _('Филиал №3 в г.Богородск')
-    BRANCH4 = 4, _('Филиал №4 в г.Бор')
-    BRANCH5 = 5, _('Филиал №5 в г.Павлово')
-    BRANCH6 = 6, _('Филиал №6 в г.Сергач')
-    NN = 7, _('Нижний Новгород')
-
-
 class Unit(models.Model):
     id = models.IntegerField('ID',
                              primary_key=True,
@@ -50,6 +39,7 @@ class Executor(models.Model):
                             db_column='dolgn')
     unit = models.ForeignKey('Unit',
                              on_delete=models.PROTECT,
+                             related_name='executors',
                              db_column='unit')
 
     def __str__(self):
@@ -79,16 +69,12 @@ class User(AbstractUser):
                                  db_column='id_exec',
                                  default=0,
                                  verbose_name='Исполнитель')
-    branch = models.SmallIntegerField('Филиал/НН',
-                                      default=0,
-                                      choices=MainBranch.choices,
-                                      db_column='branch')
     role = models.CharField('Роль',
                             max_length=9,
                             choices=ROLES,
                             default=USER)
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['executor', 'branch']
+    REQUIRED_FIELDS = []
     objects = UserManager()
 
     def __str__(self):

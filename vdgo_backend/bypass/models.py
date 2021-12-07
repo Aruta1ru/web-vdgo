@@ -246,11 +246,9 @@ class EquipmentModel(models.Model):
 
 class EquipmentInfo(models.Model):
     id = models.IntegerField('ID',
-                             primary_key=True,
-                             db_column='id_param')
+                             primary_key=True)
     equipment = models.ForeignKey('Equipment',
                                   on_delete=models.PROTECT,
-                                  db_column='id_st',
                                   related_name='info',
                                   verbose_name='Оборудование')
     eyeliner_type = models.BooleanField('Вид подводки')
@@ -397,6 +395,7 @@ class BypassBuffer(models.Model):
 
     class Meta:
         db_table = 'web_vdgo_buff_bypass'
+        managed = False
 
 
 class EquipmentInfoBuffer(models.Model):

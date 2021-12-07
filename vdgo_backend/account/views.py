@@ -2,10 +2,13 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import Executor, User
+
+from .filters import UnitFilter, ExecutorFilter
+from .models import Executor, Unit, User
 from .permissions import HasAdminRole
-from .serializers import UserSerializer
+from .serializers import UnitSerializer, ExecutorSerializer, UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -29,9 +32,6 @@ class UserViewSet(viewsets.ModelViewSet):
         if 'executor' not in request.data:
             return Response({'error': 'Необходимо поле - Исполнитель'},
                             status=status.HTTP_400_BAD_REQUEST)
-        if 'branch' not in request.data:
-            return Response({'error': 'Необходимо поле - Подразделение'},
-                            status=status.HTTP_400_BAD_REQUEST)
         password = request.data['password']
         username = request.data['username']
         if Executor.objects.filter(pk=request.data['executor']).exists():
@@ -39,11 +39,9 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response({'error': 'Такого Исполнителя не существует!'},
                             status=status.HTTP_400_BAD_REQUEST)
-        branch = request.data['branch']
         new_user = User.objects.create_user(username=username,
                                             password=password,
-                                            executor=executor,
-                                            branch=branch)
+                                            executor=executor)
         user_serializer = UserSerializer(new_user)
         return Response(user_serializer.data,
                         status=status.HTTP_201_CREATED)
@@ -55,3 +53,21 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(self.request.user)
         return Response(serializer.data,
                         status=status.HTTP_200_OK)
+
+
+class UnitViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = UnitSerializer
+    queryset = Unit.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = UnitFilter
+    permission_classes = [IsAuthenticated, HasAdminRole]
+    pagination_class = None
+
+
+class ExecutorViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ExecutorSerializer
+    queryset = Executor.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ExecutorFilter
+    permission_classes = [IsAuthenticated, HasAdminRole]
+    pagination_class = None
