@@ -1,0 +1,20 @@
+export const GET_ADDRESSES = 'GET_ADDRESSES' 
+export const GET_EQUIPMENT = 'GET_EQUIPMENT' 
+
+export const GET_IMAGES = 'GET_IMAGES' 
+export const GET_REASONS = 'GET_REASONS'
+export const GET_UNITS = 'GET_UNITS'
+export const SET_UNIT = 'SET_UNIT'
+export const GET_EXECUTORS = 'GET_EXECUTORS'
+export const SET_REGISTER_EXECUTOR = 'SET_REGISTER_EXECUTOR'
+export const SET_REGISTER_USERNAME = 'SET_REGISTER_USERNAME'
+export const SET_REGISTER_PASSWORD = 'SET_REGISTER_PASSWORD'
+export const SET_USER_PROFILE = 'SET_USER_PROFILE'
+export const GET_ITD = 'GET_ITD'
+
+export const GET_BYPASSES = 'GET_BYPASSES' 
+
+export const AUTH_REQUEST = 'AUTH_REQUEST'
+export const AUTH_SUCCESS = 'AUTH_SUCCESS'
+export const AUTH_ERROR = 'AUTH_ERROR'
+export const LOGOUT = 'LOGOUT'

@@ -1,0 +1,22 @@
+{
+    "data":[
+        {
+            "id": "1",
+            "name": "Файл ITD 1.pdf",
+            "size": "1mb",
+            "src": "Title 1"
+        },
+        {
+            "id": "2",
+            "name": "Файл ITD 2.pdf",
+            "size": "2mb",
+            "src": "Title 1"
+        },
+        {
+            "id": "3",
+            "name": "Файл ITD 3.pdf",
+            "size": "3mb",
+            "src": "Title 1"
+        }
+    ]
+}

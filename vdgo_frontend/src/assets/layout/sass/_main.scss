@@ -1,0 +1,26 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    font-size: $fontSize;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: $fontSize;
+    color: var(--text-color);
+    background-color: var(--surface-ground);
+    //linear-gradient(90deg,#71b4e4 0,#9de0f5);
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
