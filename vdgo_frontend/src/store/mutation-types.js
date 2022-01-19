@@ -13,6 +13,8 @@ export const SET_USER_PROFILE = 'SET_USER_PROFILE'
 export const GET_ITD = 'GET_ITD'
 
 export const GET_BYPASSES = 'GET_BYPASSES' 
+export const GET_BYPASS_COUNT = 'GET_BYPASS_COUNT'
+export const CHANGE_DATE = 'CHANGE_DATE'
 
 export const AUTH_REQUEST = 'AUTH_REQUEST'
 export const AUTH_SUCCESS = 'AUTH_SUCCESS'

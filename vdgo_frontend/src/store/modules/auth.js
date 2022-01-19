@@ -18,13 +18,7 @@ state: {
         password: null,
         executor: 0
     },
-    user: {
-        name: '',
-        unit: '',
-        post: '',
-        role: '',
-        id: 0
-    }
+    user: {}
 },
 
 getters: {
@@ -111,20 +105,16 @@ actions: {
             resolve()
         })
     },
-    loadUserProfile({commit}) {
-        return new Promise((resolve, reject) => {
-            axios({ 
-                url: 'http://127.0.0.1:8000/api/v1/users/profile/',
-                method: 'GET'
-            })
-            .then(response => {
-                commit(SET_USER_PROFILE, response.data)
-                resolve(response)
-            })
-            .catch(err => {
-                reject(err)
-            })
-        })
+    async loadUserProfile({commit, dispatch}) {
+        try {
+            const response = await axios.get(
+                'http://127.0.0.1:8000/api/v1/users/profile/'
+            )
+            commit(SET_USER_PROFILE, response.data)
+            dispatch('getBypasses')
+        } catch (e) {
+            alert("Ошибка!");
+        }
     }
 }      
 }

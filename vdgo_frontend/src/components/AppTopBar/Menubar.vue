@@ -27,10 +27,10 @@
 	
         <div class="flex justify-content-between mb-3">
           <div>
-            <span class="block text-500 font-medium mb-3"> {{ this.userProfile.name }} </span>
-            <div class="text-900 font-medium text-lg"> {{ this.userProfile.unit }} </div>
-            <div class="text-900 font-medium text-lg"> {{ this.userProfile.post }} </div>
-            <div class="text-900 font-medium text-lg"> {{ this.roleText }} </div>
+            <span class="block text-500 font-medium mb-3"> {{ userProfile.name }} </span>
+            <div class="text-900 font-medium text-lg"> {{ userProfile.unit }} </div>
+            <div class="text-900 font-medium text-lg"> {{ userProfile.post }} </div>
+            <div class="text-900 font-medium text-lg"> {{ roleText }} </div>
             </div>
              <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width:2.5rem;height:2.5rem;">
               <i class="pi pi-user text-blue-500 text-lg"></i>
@@ -54,6 +54,13 @@ export default {
     OverlayPanel,
   },
 
+  props: {
+    userProfile: {
+      type: Object,
+      required: true
+    }
+  },
+
   data() {
     return {
       logo: logo,
@@ -68,16 +75,11 @@ export default {
     showProfile(event) {
       this.$refs.profilePanel.toggle(event);
     },
-
-    /*...mapActions({
-      loadUserProfile: "loadUserProfile"
-    }),*/
   },
 
   computed: {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
-      userProfile: "userProfile",
       roleText: "roleText"
     }),
   },

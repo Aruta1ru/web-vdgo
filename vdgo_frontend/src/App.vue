@@ -1,7 +1,7 @@
 <template>
   <Toast />
   <ScrollTop :threshold="150" />
-  <Menubar />
+  <Menubar :userProfile="userProfile" />
 
   <div class="layout-main-container">
     <div class="layout-main">
@@ -28,7 +28,8 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: "isLoggedIn",
-    }),
+      userProfile: "userProfile"
+    })
   }, 
 
   methods: {
@@ -52,5 +53,6 @@ export default {
 
     });
   },
+
   }
 </script>

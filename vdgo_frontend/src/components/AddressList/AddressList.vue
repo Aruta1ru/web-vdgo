@@ -1,22 +1,21 @@
 <template> 
 
-<div class="card"> 
+<div v-if="bypasses" class="card"> 
   <div class="grid"> 
     <div class="col-12 md:col-6 lg:col-6 xl:col-3 mb-2 "> 
         <div class="flex justify-content-between mb-3">
           <div>
             <h3 class="block text-500 font-medium mb-3"> Дата </h3>
             <div class="text-900 font-medium text-xl"> 
-        <Calendar style="width: 12em" id="calendar"  v-model="date" :monthNavigator="true" :yearNavigator="true" 
-        yearRange="2000:2030" :showIcon="true" :showButtonBar="true" :touchUI="true" dateFormat="dd.mm.yy"/>
+        <Calendar @date-select="setDate(this.date)" style="width: 12em" id="calendar"  v-model="date" :monthNavigator="true" :yearNavigator="true" 
+        yearRange="2019:2023" :showIcon="true" :showButtonBar="true" :touchUI="true" dateFormat="yy-mm-dd"/>
   </div>
             </div>
               </div> 
-            <span class="text-green-600 text-base" v-if="bypasses">  {{this.bypasses.totalBypasses}} </span>
-            <span class="text-blue-500 text-base" v-else> 0 </span> 
+            <span class="text-green-600 text-base">  {{bypassCount}} </span>
              адресов на
               <span class="text-blue-500 text-base" v-if="date"> {{new Date(date).toLocaleString().slice(0,10)}} </span> 
-              <span class="text-orange-500 text-base" v-else> (не выбрана дата!) </span>
+              <span class="text-orange-500 text-base" v-else> сегодня </span>
     </div>
 </div>
 
@@ -30,6 +29,7 @@
           
   <!--responsiveLayout="scroll"  не будет в мобильном варианте делать вертикальную развертку--> 
   <!--штатно breakpoint="960px"-->
+  <div v-if="bypasses.length>0">
   <DataTable 
   :value="bypasses" 
   responsiveLayout="stack" 
@@ -43,12 +43,11 @@
   v-model:filters="filters" 
   dataKey="id">
                 <Column field="address" header="Адрес" :sortable="true"></Column>
-            <!--<Column field="date" header="Дата обхода" :sortable="true"></Column> -->
-                <Column field="execStatus" header="Статус выполнения" :sortable="true">
+                <Column field="statusText" header="Статус выполнения" :sortable="true">
                     <template #body="slotProps">  
                       
-                      <Badge value="slotProps.data.execStatus" :class="statusClass(slotProps.data)" > 
-                        {{slotProps.data.execStatus}}
+                      <Badge value="slotProps.data.statusText" :class="statusClass(slotProps.data)" > 
+                        {{slotProps.data.statusText}}
                       </Badge>
                       
                     </template>
@@ -68,8 +67,12 @@
                     </template>
                 </Column>  
                        </DataTable>
-                   </div> 	
+        </div>
+        <div v-else>
+          <h2>Адресов на выбранную дату не обнаружено</h2>
+        </div>	
 
+                   </div> 
 </template>
 
 <script>
@@ -80,8 +83,8 @@ import Column from 'primevue/column'
 import InputText from 'primevue/inputtext' 
 import Calendar from 'primevue/calendar';
 import Button from 'primevue/button'
-import { mapGetters, mapActions } from 'vuex'
 import ReasonsSelector from './ReasonsSelector.vue' 
+import {mapActions} from "vuex"
 
 export default {
   
@@ -95,36 +98,36 @@ export default {
   ReasonsSelector
   },
 
-created() {  this.initFilters(); },
-
-
-  computed: {
-    ...mapGetters({
-      bypasses: "bypasses",
-      userProfile: "userProfile"
-    }),
+props: {
+    bypasses: {
+      type: Array,
+    },
+    bypassCount: {
+      type: Number,
+      required: true,
+      default: 0
+    }
   },
 
+created() {  this.initFilters(); },
 
 data() {
         return {  
         selectedRows: null,
         loading: false,
         filters:{},
-        date: null
+        date: null,
         }
         },
 methods: { 
-
   ...mapActions({
-    loadBypasses: "getBypasses"
+    setDate: "setDate"
   }),
 
     doneClick () {
 						this.$toast.add({severity:'success', summary:'Статус изменен', detail:'Выполнено', life: 3000});
 					}, 
 
-    
   onRowSelect(e) {
 				console.log(e);
 				if (e.type === 'row')
@@ -143,14 +146,10 @@ methods: {
                     'undone': data.inventoryStatus === "Не выполнено",
                     'inwork': data.inventoryStatus === "В работе",
                     'done': data.inventoryStatus === "Выполнено"
-                 }
+                }
             ];
         }           
-},
-                                   
-mounted() { 
-      this.loadBypasses(this.userProfile.id)
-  }
+}
 }
 </script>              
 

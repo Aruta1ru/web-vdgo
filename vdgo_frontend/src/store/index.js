@@ -21,5 +21,5 @@ export default createStore({
   images,
   itd,
   reasons
-  },
+  }
 })
