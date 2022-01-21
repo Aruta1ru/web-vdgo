@@ -15,7 +15,7 @@
     "core-js": "^3.19.0",
     "primeflex": "^3.1.0",
     "primeicons": "^5.0.0",
-    "primevue": "^3.8.2",
+    "primevue": "^3.11.0",
     "roboto-fontface": "*",
     "vue": "^3.2.20",
     "vue-axios": "^3.3.7",

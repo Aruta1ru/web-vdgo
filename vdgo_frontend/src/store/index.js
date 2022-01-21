@@ -1,5 +1,5 @@
 import { createStore } from 'vuex' 
-import addresses from "./modules/addresses";
+import vdgoObject from "./modules/vdgoObject";
 import auth from "@/store/modules/auth"
 import bypasses from "@/store/modules/bypasses"
 import equipment from "./modules/equipment"
@@ -12,7 +12,7 @@ import reasons from "./modules/reasons"
 export default createStore({
   
   modules: {
-  addresses,
+  vdgoObject,
   bypasses,
   equipment,
   auth,

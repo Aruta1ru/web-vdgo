@@ -8,7 +8,7 @@
             <h3 class="block text-500 font-medium mb-3"> Дата </h3>
             <div class="text-900 font-medium text-xl"> 
         <Calendar @date-select="setDate(this.date)" style="width: 12em" id="calendar"  v-model="date" :monthNavigator="true" :yearNavigator="true" 
-        yearRange="2019:2023" :showIcon="true" :showButtonBar="true" :touchUI="true" dateFormat="yy-mm-dd"/>
+        yearRange="2019:2023"  :showIcon="true" :showButtonBar="true" :touchUI="true" dateFormat="yy-mm-dd"/>
   </div>
             </div>
               </div> 
@@ -63,7 +63,7 @@
 
                 <Column style="width:3.5rem" >  
                 <template #body> 
-                  <ReasonsSelector />
+                  <ReasonsSelector :reasons="reasons" />
                     </template>
                 </Column>  
                        </DataTable>
@@ -84,7 +84,7 @@ import InputText from 'primevue/inputtext'
 import Calendar from 'primevue/calendar';
 import Button from 'primevue/button'
 import ReasonsSelector from './ReasonsSelector.vue' 
-import {mapActions} from "vuex"
+import {mapActions, mapGetters} from "vuex"
 
 export default {
   
@@ -112,16 +112,22 @@ props: {
 created() {  this.initFilters(); },
 
 data() {
-        return {  
+    return {  
         selectedRows: null,
         loading: false,
         filters:{},
         date: null,
         }
         },
+computed: {
+  ...mapGetters({
+    reasons: "reasons"
+  })
+},
 methods: { 
   ...mapActions({
-    setDate: "setDate"
+    setDate: "setDate",
+    getObject: "loadObject"
   }),
 
     doneClick () {
@@ -131,7 +137,8 @@ methods: {
   onRowSelect(e) {
 				console.log(e);
 				if (e.type === 'row')
-					this.$emit("row-select", e.data);
+					//this.$emit("row-select", e.data);
+          this.getObject(e.data.objectId)
           this.$router.push("/tabs");
 			},      
 

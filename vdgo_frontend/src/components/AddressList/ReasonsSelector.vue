@@ -10,9 +10,9 @@
 		<h3>Укажите причину невыполнения </h3>
 	</template>
  
-        <div v-for="reason of reasons" :key="reason.key" class="p-field-radiobutton">
-            <RadioButton :id="reason.key" :value="reason" v-model="selectedReasons"  />
-            <label :for="reason.key">{{reason.name}}</label>
+        <div v-for="reason of reasons" :key="reason.id" class="p-field-radiobutton">
+            <RadioButton :id="reason.id" :value="name_full" />
+            <label :for="reason.id">{{reason.name_full}}</label>
         </div>
 <!--Блокировка пункта из списка :disabled="reason.key === '1'" -->
 	<template #footer>
@@ -31,7 +31,6 @@
 import RadioButton from 'primevue/radiobutton';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button'
-import { mapGetters } from 'vuex'
 export default { 
 
 components: {
@@ -48,6 +47,14 @@ Button
 		}
 	}, 
 
+
+props: {
+    reasons: {
+      type: Array,
+    }
+  },
+
+
 	methods: { 
 		undoneClick() {
 			this.display=true
@@ -57,13 +64,7 @@ Button
 			this.$toast.add({severity:'error', summary:'Статус изменен', detail:'Не выполнено', life: 3000});
 			this.display= false;
 		}
-	},
-
-	computed: mapGetters(['reasons']),
-	
-	beforeMount () { 
-    this.$store.dispatch('getReasons') 
-  }
+	}
 
 }
 

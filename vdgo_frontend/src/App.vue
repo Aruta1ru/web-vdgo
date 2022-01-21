@@ -34,12 +34,17 @@ export default {
 
   methods: {
     ...mapActions({
-      loadUserProfile: "loadUserProfile"
+      loadUserProfile: "loadUserProfile",
+      loadReasons: "loadReasons"
     }),
   },
 
   mounted() {
-    if (this.isLoggedIn) this.loadUserProfile()
+    if (this.isLoggedIn) {
+      this.loadUserProfile()
+      this.loadReasons()
+    } 
+
   },
 
   created() {

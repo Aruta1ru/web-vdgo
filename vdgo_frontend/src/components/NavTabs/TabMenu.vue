@@ -2,7 +2,7 @@
 
 
         <div class="card "> 
-            <h3> Объект object.name </h3>
+            <h3> Объект {{ this.address }} </h3>
             <TabMenu :model="items" /> 
         </div>  
         
@@ -13,10 +13,17 @@
 <script> 
 
 import TabMenu from 'primevue/tabmenu';
+import { mapGetters } from 'vuex';
 export default { 
     components: {
         TabMenu
         },
+
+    computed: {
+        ...mapGetters({
+            address: "address",
+        })
+    },
 
     data() {
         return {  

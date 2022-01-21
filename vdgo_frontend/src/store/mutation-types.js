@@ -1,4 +1,3 @@
-export const GET_ADDRESSES = 'GET_ADDRESSES' 
 export const GET_EQUIPMENT = 'GET_EQUIPMENT' 
 
 export const GET_IMAGES = 'GET_IMAGES' 
@@ -15,6 +14,8 @@ export const GET_ITD = 'GET_ITD'
 export const GET_BYPASSES = 'GET_BYPASSES' 
 export const GET_BYPASS_COUNT = 'GET_BYPASS_COUNT'
 export const CHANGE_DATE = 'CHANGE_DATE'
+
+export const GET_OBJECT = 'GET_OBJECT'
 
 export const AUTH_REQUEST = 'AUTH_REQUEST'
 export const AUTH_SUCCESS = 'AUTH_SUCCESS'
