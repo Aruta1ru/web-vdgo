@@ -12,7 +12,6 @@ export default {
     bypasses: (state) => state.bypasses,
     bypassCount: (state) => state.bypassCount,
     selectedDateTxt: (state) => {
-        //return JSON.stringify(new Date(state.selectedDate)).slice(1,11)
         return new Date(state.selectedDate).toLocaleString().slice(0,10)
     }
   },
@@ -25,6 +24,7 @@ export default {
         element.id = bypass.id;
         element.objectId = bypass.object.id;
         element.address = bypass.object.address;
+        element.dogType = bypass.dog_type;
         element.execStatus = bypass.exec_status;
         element.fixed = bypass.is_fixed;
         element.undoneReason = bypass.undone_reason.name_short;

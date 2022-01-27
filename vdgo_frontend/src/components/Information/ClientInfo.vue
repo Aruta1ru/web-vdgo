@@ -12,11 +12,11 @@
                   <div class="flex justify-content-between mb-3">
           <div>
             <h3 class="block text-500 font-medium mb-3"> Тип договора </h3>
-            <div class="text-900 font-medium text-lg"> !!!Частное лицо!!! </div> 
+            <div class="text-900 font-medium text-lg"> {{ dogType }} </div> 
           <div class="mt-2 mb-2">
                 <Inplace :closable="true">
     <template #display>
-        {{ phoneVdgo }}
+        Телефон: {{ phoneVdgo }}
     </template>
     <template #content>
         <InputMask v-model="phone" mask="9 (999) 999-9999" placeholder="9 (999) 999-9999" />
@@ -28,7 +28,7 @@
               <div class="mt-2 mb-2"> 
 <Inplace :closable="true">
     <template #display>
-        {{ emailVdgo }}
+        Адрес электронной почты: {{ emailVdgo }}
     </template>
     <template #content>
         <InputText placeholder="Email" v-model="email" />
@@ -49,20 +49,18 @@
                    <div class="card">
                   <div class="flex justify-content-between mb-3">
           <div>
-            <h3 class="block text-500 font-medium mb-3"> Информация о клиенте </h3>
-            <div v-if="clients===0">
-              <div class="text-900 font-medium text-lg"> {{ clients.name }} </div> 
+            <h3 class="block text-500 font-medium mb-3"> Информация о клиентах </h3>
+            <div v-if="clients && clients.length > 0">
+            <div v-for="client in clients" :key="client.id">
+              <div class="text-900 font-medium text-lg"> {{ client.name }} </div> 
               <div class="mt-2 mb-2"> 
-              <div class="text-900  text-base" > Телефон: {{ clients.phone }} </div> 
+              <div class="text-900  text-base" > Телефон: {{ client.phone }} </div> 
           
               </div> 
-
-            <div class="mt-2 mb-2"> 
-<div class="text-900 text-base"> !!!Email: client@mail.ru!!! </div>
             </div>
             </div>
             <div v-else>
-              <h4>Данные по клиенту отсутствуют</h4>
+              <h3>Данные по клиенту отсутствуют</h3>
             </div>
             </div>
             <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width:2.5rem;height:2.5rem;">
@@ -76,7 +74,7 @@
                   <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
 						<h3 class="p-mb-2 p-m-md-0 p-as-md-center"> Предыдущее ВДГО </h3> 
 					</div>
-          <div v-if="prevBypasses===0">
+          <div v-if="prevBypasses">
       <DataTable 
   :value="prevBypasses" 
   responsiveLayout="stack" 
@@ -89,13 +87,13 @@
                 <Column field="date_action" header="Дата обхода" :sortable="true"></Column>
                 <Column field="execStatus" header="Статус выполнения" :sortable="true">
                     <template #body="slotProps">  
-                      <Badge value="slotProps.data.execStatus" :class="statusClass(slotProps.data)" > 
-                        {{slotProps.data.execStatus}}
+                      <Badge value="execStatusTxt(slotProps.data.exec_status)" :class="statusClass(slotProps.data)" > 
+                        {{execStatusTxt(slotProps.data.exec_status)}}
                       </Badge>
                       
                     </template>
                 </Column> 
-                <Column field="undone_reason" header="Причина невыполнения" :sortable="true" > </Column>
+                <Column field="undone_reason.name_short" header="Причина невыполнения" :sortable="true" > </Column>
                        </DataTable>
                         </div>
       <div v-else>
@@ -137,13 +135,14 @@ components:{
      prevBypasses: "prevBypasses",
      phoneVdgo: "phoneVdgo",
      emailVdgo: "emailVdgo",
-     reasons: "reasons"
-   })
+     reasons: "reasons",
+     dogType: "dogType"
+   }),
  },
 
   methods: {
 
-     statusClass(data) {
+    statusClass(data) {
             return [
                 {
                     'undone': data.inventoryStatus === "Не выполнено",
@@ -151,7 +150,15 @@ components:{
                     'done': data.inventoryStatus === "Выполнено"
                  }
             ];
-        }        
+        },
+    execStatusTxt: (status) => {
+      switch (status) {
+            case 0: return 'в работе';
+            case 1: return 'выполнено';
+            case 2: return 'не выполнено';
+            default: return 'неизвестный статус';
+        }
+   }      
   },  
 
 }

@@ -127,7 +127,8 @@ computed: {
 methods: { 
   ...mapActions({
     setDate: "setDate",
-    getObject: "loadObject"
+    getObject: "loadObject",
+    getDogType: "getDogType"
   }),
 
     doneClick () {
@@ -135,9 +136,9 @@ methods: {
 					}, 
 
   onRowSelect(e) {
-				console.log(e);
 				if (e.type === 'row')
 					//this.$emit("row-select", e.data);
+          this.getDogType(e.data.dogType)
           this.getObject(e.data.objectId)
           this.$router.push("/tabs");
 			},      

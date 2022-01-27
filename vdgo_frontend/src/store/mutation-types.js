@@ -16,6 +16,7 @@ export const GET_BYPASS_COUNT = 'GET_BYPASS_COUNT'
 export const CHANGE_DATE = 'CHANGE_DATE'
 
 export const GET_OBJECT = 'GET_OBJECT'
+export const GET_OBJECT_DOG_TYPE = 'GET_OBJECT_DOG_TYPE'
 
 export const AUTH_REQUEST = 'AUTH_REQUEST'
 export const AUTH_SUCCESS = 'AUTH_SUCCESS'

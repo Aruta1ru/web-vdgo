@@ -1,10 +1,11 @@
-import { GET_OBJECT } from '../mutation-types'
+import { GET_OBJECT, GET_OBJECT_DOG_TYPE } from '../mutation-types'
 import axios from "axios"
 
 export default {
 
 state: {
-    vdgoObject: {}
+    vdgoObject: {},
+    objectDogType: null
 },
 
 getters: {
@@ -12,13 +13,25 @@ getters: {
     clients: state => state.vdgoObject.clients,
     prevBypasses: state => state.vdgoObject.bypasses,
     address: state => state.vdgoObject.address,
-    phoneVdgo: state => state.vdgoObject.phone_vdgo,
-    emailVdgo: state => state.vdgoObject.email_vdgo
+    phoneVdgo: state => state.vdgoObject.phone_vdgo === null ? "н/д" : state.vdgoObject.phone_vdgo,
+    emailVdgo: state => state.vdgoObject.email_vdgo === null ? "н/д" : state.vdgoObject.email_vdgo,
+    dogType: (state) => {
+        switch (state.objectDogType) {
+            case 0: return "Отсутствует";
+            case 1: return "Частное лицо";
+            case 2: return "Юридическое лицо";
+            case 3: return "СБК";
+            default: return "н/д";
+        }
+    }
 },
 
 mutations:{
     [GET_OBJECT] (state, vdgoObject) {
         state.vdgoObject = vdgoObject
+      },
+    [GET_OBJECT_DOG_TYPE] (state, dogType) {
+        state.objectDogType = dogType
       }
     }, 
  
@@ -33,6 +46,10 @@ actions: {
         console.log(e)
     }
       },
+
+    getDogType({commit}, dogType) {
+        commit(GET_OBJECT_DOG_TYPE, dogType)
+    }
 }      
 }
 
