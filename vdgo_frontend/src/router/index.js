@@ -1,14 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import UploadPhoto from '../views/UploadPhoto.vue'
-import UploadITD from '../views/UploadITD.vue'
-import Client from '../views/Client.vue'
-import Equipment from '../views/Equipment.vue'
-import LoginPage from '../views/LoginPage.vue'
-import RegistryPage from '../views/RegistryPage.vue'
-import TabMenu from '../views/TabMenu.vue'
-import NotFound from '../views/NotFound.vue'
 import store from '../store'
+const Home = () => import('../views/Home.vue')
+const UploadPhoto = () => import('../views/UploadPhoto.vue')
+const UploadITD = () => import('../views/UploadITD.vue')
+const Client = () => import('../views/Client.vue')
+const Equipment = () => import('../views/Equipment.vue')
+const LoginPage = () => import('../views/LoginPage.vue')
+const RegistryPage = () => import('../views/RegistryPage.vue')
+const TabMenu = () => import('../views/TabMenu.vue')
+const NotFound = () => import('../views/NotFound.vue')
+const accessDenied = () => import('../views/accessDenied.vue')
 
 const routes = [
   {
@@ -21,6 +22,13 @@ const routes = [
     path: '/registry',
     name: 'RegistryPage',
     component: RegistryPage,
+    beforeEnter: (to, from, next) => {
+      if (store.getters.isAdmin) {
+        next()
+      } else {
+        next('accessDenied') //переадресация на accessDenied, если это USER
+      }
+    },
     meta: { 
       requiresAuth: true
     }
@@ -31,7 +39,7 @@ const routes = [
     name: 'Home',
     component: Home,
     meta: { 
-      requiresAuth: true
+      requiresAuth: true,
     }
   }, 
 
@@ -72,11 +80,23 @@ const routes = [
     path: '/:pathMatch(.*)*', 
     name:'404',
     component: NotFound 
-  } // Страница 404  
+  }, // Страница 404
+  
+  
+  { 
+    path: '/accessDenied', 
+    name:'accessDenied',
+    component: accessDenied 
+  } // Страница недостаточно прав для регистрации пользователя  
+
 ]
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+const router = createRouter({ 
+  history: createWebHistory(),
+  scrollBehavior() {
+    // всегда при переходе будет возврат к верхушке страницы
+    return { top: 0 }
+  },
   routes
 })
 

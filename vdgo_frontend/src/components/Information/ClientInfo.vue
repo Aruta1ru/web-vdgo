@@ -2,7 +2,7 @@
 
  <div class="card"> 
 <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-						<h2 class="p-mb-2 p-m-md-0 p-as-md-center"> Общие сведения </h2> 
+						<h2 class="p-mb-2 p-m-md-0 p-as-md-center text-900 font-medium text-xl"> Общие сведения </h2> 
 					</div>
 
    <div class="grid"> 
@@ -14,25 +14,27 @@
             <h3 class="block text-500 font-medium mb-3"> Тип договора </h3>
             <div class="text-900 font-medium text-lg"> {{ dogType }} </div> 
           <div class="mt-2 mb-2">
-                <Inplace :closable="true">
+                <Inplace :closable="true" @close="updatePhone(idObject,setPhone(this.newPhone))"> 
+      <!--После того как появятся события по измененеию телефона
+<Inplace :closable="true" @close="savePhone"> -->
     <template #display>
         Телефон: {{ phoneVdgo }}
     </template>
     <template #content>
-        <InputMask v-model="phone" mask="9 (999) 999-9999" placeholder="9 (999) 999-9999" />
-                    <Button icon="pi pi-check" class="p-button-success"/>
+        <InputMask v-model="newPhone" mask="9 (999) 999-9999" :placeholder="phoneVdgo" />
     </template>
 </Inplace>
                     
         </div> 
               <div class="mt-2 mb-2"> 
-<Inplace :closable="true">
+<Inplace :closable="true" @close="updateEmail(idObject,setEmail(this.newEmail))"> 
+<!--После того как появятся события по измененеию email
+<Inplace :closable="true" @close="saveEmail"> -->
     <template #display>
         Адрес электронной почты: {{ emailVdgo }}
     </template>
     <template #content>
-        <InputText placeholder="Email" v-model="email" />
-        <Button icon="pi pi-check" class="p-button-success"/>
+        <InputText :placeholder="emailVdgo" v-model="newEmail" />
     </template>
 </Inplace>       
                 </div>      
@@ -60,7 +62,7 @@
             </div>
             </div>
             <div v-else>
-              <h3>Данные по клиенту отсутствуют</h3>
+              <div class="text-900 font-medium text-lg"> Данные по клиенту отсутствуют </div> 
             </div>
             </div>
             <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width:2.5rem;height:2.5rem;">
@@ -72,7 +74,7 @@
 </div>
 
                   <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-						<h3 class="p-mb-2 p-m-md-0 p-as-md-center"> Предыдущее ВДГО </h3> 
+						<h3 class="p-mb-2 p-m-md-0 p-as-md-center text-900 font-medium text-xl"> Предыдущее ВДГО </h3> 
 					</div>
           <div v-if="prevBypasses">
       <DataTable 
@@ -83,9 +85,9 @@
   :paginator="true" 
   :rows="10" 
   dataKey="id">
-                <Column field="executor.name" header="Исполнитель" :sortable="true"></Column>
-                <Column field="date_action" header="Дата обхода" :sortable="true"></Column>
-                <Column field="execStatus" header="Статус выполнения" :sortable="true">
+                <Column bodyStyle="width:25%" field="executor.name" header="Исполнитель" :sortable="true"></Column>
+                <Column bodyStyle="width:25%" field="date_action" header="Дата обхода" :sortable="true"></Column>
+                <Column bodyStyle="width:25%" field="execStatus" header="Статус выполнения">
                     <template #body="slotProps">  
                       <Badge value="execStatusTxt(slotProps.data.exec_status)" :class="statusClass(slotProps.data)" > 
                         {{execStatusTxt(slotProps.data.exec_status)}}
@@ -93,7 +95,7 @@
                       
                     </template>
                 </Column> 
-                <Column field="undone_reason.name_short" header="Причина невыполнения" :sortable="true" > </Column>
+                <Column bodyStyle="width:25%" field="undone_reason.name_short" header="Причина невыполнения" > </Column>
                        </DataTable>
                         </div>
       <div v-else>
@@ -106,11 +108,10 @@
 
 import InputMask from 'primevue/inputmask'
 import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Badge from 'primevue/badge'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import Inplace from 'primevue/inplace'
 
 
@@ -120,12 +121,18 @@ export default {
 components:{
   InputMask,
   InputText,
-  Button,
   DataTable,
   Column,
   Badge,
   Inplace
   
+ }, 
+
+ data () {
+   return {
+     newEmail: null,
+     newPhone: null
+   }
  },
  
  computed: {
@@ -140,14 +147,21 @@ components:{
    }),
  },
 
-  methods: {
+  methods: { 
+
+    ...mapActions({
+      updateEmail: 'updateEmail',
+      updatePhone: 'updatePhone',
+      setEmail: 'setEmail',
+      setPhone: 'setPhone'
+    }),
 
     statusClass(data) {
             return [
                 {
-                    'undone': data.inventoryStatus === "Не выполнено",
-                    'inwork': data.inventoryStatus === "В работе",
-                    'done': data.inventoryStatus === "Выполнено"
+                    'undone': data.exec_status === 2,
+                    'inwork': data.exec_status === 0,
+                    'done': data.exec_status === 1 
                  }
             ];
         },
@@ -165,13 +179,8 @@ components:{
 </script>
 
 
-<style lang="scss" scoped> 
 
- @media screen and (max-width: 500px) {
-    .p-datatable-sm {
-      font-size: 0.8rem;  
-       } 
-} 
+<style lang="scss" scoped> 
  
 //Динамическое изменение цвета badge в зависимости от статуса 
 
@@ -185,7 +194,8 @@ components:{
 
 .done {
     background-color: #66BB6A;
-}
+} 
+
 
 
 </style>

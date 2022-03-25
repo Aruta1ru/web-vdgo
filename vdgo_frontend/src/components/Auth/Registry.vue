@@ -1,15 +1,17 @@
 <template>
   <div class="form-registry">
     <div class="p-d-flex p-jc-center">
-      <div class="card">
-        <h2 class="text-center">Регистрация</h2>
+      <div class="card"> 
+        <div class="text-center mb-5"> 
+        <div class="text-900 text-2xl font-medium mb-3">Регистрация</div>
+    </div>
         <form class="p-fluid" @submit.prevent>
           <div class="p-field p-col-12 p-md-4">
             <div class="p-float-label">
               <InputText
                 id="username"
                 v-model="username"
-                autocomplete="username"
+                autocomplete="off"
                 @change="setRegisterUsername(this.username)"
               />
               <label for="username">Имя пользователя</label>
@@ -20,7 +22,7 @@
               <Password
                 id="password"
                 v-model="password"
-                autocomplete="current-password"
+                autocomplete="off"
                 @change="setRegisterPassword(this.password)"
                 toggleMask
               />
@@ -99,7 +101,9 @@
         </form>
       </div>
     </div>
-  </div>
+  </div> 
+
+
 </template>
 
 <script>
@@ -127,11 +131,12 @@ export default {
 
 
   computed: {
-    ...mapState({
+    ...mapState(  
+      {
       units: (state) => state.units.units,
       executors: (state) => state.executors.executors,
       registerUser: (state) => state.registerUser
-    }),
+    })
   },
 
   methods: {
@@ -158,8 +163,10 @@ export default {
     },
   },
 
-  mounted() {
-      this.getUnits()
+  created() 
+  { 
+      this.getUnits(),
+      this.getExecutors()
   }
 };
 </script>

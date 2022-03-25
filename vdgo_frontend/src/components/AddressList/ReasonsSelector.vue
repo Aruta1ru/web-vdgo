@@ -6,22 +6,22 @@
 	:maximizable="true"
 	:modal="true"
 	>
-    <template #header>
-		<h3>Укажите причину невыполнения </h3>
+    <template #header> 
+		<h3 class="text-900 font-medium text-xl">Укажите причину невыполнения</h3>
 	</template>
  
         <div v-for="reason of reasons" :key="reason.id" class="p-field-radiobutton">
-            <RadioButton :id="reason.id" :value="name_full" />
+            <RadioButton v-model="selectedReason" :value="reason.id" :name="reason.name_full"  />
             <label :for="reason.id">{{reason.name_full}}</label>
         </div>
 <!--Блокировка пункта из списка :disabled="reason.key === '1'" -->
 	<template #footer>
-        <Button label="Сохранить" icon="pi pi-check" class="p-button-outlined p-button-primary p-button-rounded" @click="saveReason" autofocus />
+        <Button label="Сохранить" icon="pi pi-check" class="p-button-outlined p-button-primary p-button-rounded" autofocus @click="undoneToast(id, selectedReason)" />
 	</template>
 </Dialog>
 
 <!--Кнопка статуса "Не выполнено", открывающая модальное окно с выбором причины-->
-<Button icon="pi pi-times" class="p-button-danger p-button-outlined p-button-rounded" @click="undoneClick"/> 
+<Button icon="pi pi-times" class="p-button-danger p-button-text p-button-rounded" @click="undoneClick(this.id)"/> 
         
    
 </template> 
@@ -31,7 +31,10 @@
 import RadioButton from 'primevue/radiobutton';
 import Dialog from 'primevue/dialog';
 import Button from 'primevue/button'
+import {mapGetters, mapActions} from "vuex"
 export default { 
+
+props: ['id'],
 
 components: {
 RadioButton,
@@ -42,29 +45,37 @@ Button
 
 	data() {
 		return {
-			display:false,
-			selectedReasons: null
+			display: false,
+			selectedReason: null
 		}
 	}, 
 
-
-props: {
-    reasons: {
-      type: Array,
-    }
-  },
-
-
+	computed: {
+  ...mapGetters({
+    reasons: "reasons"
+  }),
+},
 	methods: { 
+	...mapActions({
+    updateStatusUndone: "updateStatusUndone",
+	setReason: "setReason" 
+	
+  }),
 		undoneClick() {
 			this.display=true
 		},
 
-		saveReason() {
-			this.$toast.add({severity:'error', summary:'Статус изменен', detail:'Не выполнено', life: 3000});
-			this.display= false;
+		undoneToast(id, selectedReason) { 
+			this.updateStatusUndone(id,this.setReason(selectedReason))
+			.then(() => {
+				this.display =false	
+                this.$toast.add({severity:'error', summary:'Изменение статуса', detail:'Не выполнено', life: 3000});
+            })
+            .catch(err => {
+            this.$toast.add({severity:'error', summary:'Изменение статуса', detail:'Ошибка', life: 3000});
+            console.log(err)})
 		}
-	}
+	},
 
 }
 

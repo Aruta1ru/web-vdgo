@@ -1,10 +1,8 @@
 import { createApp } from 'vue'
-
 import store from "./store";
 import router from "./router";
-import Axios from 'axios';
+import axios from 'axios';
 import App from './App.vue'
-
 import PrimeVue from 'primevue/config';
 import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.css';
@@ -16,8 +14,10 @@ import ToastService from 'primevue/toastservice'
 import StyleClass from 'primevue/styleclass';
 const app = createApp(App)
 
+app.config.debug = true;
+app.config.devtools = true;
+app.config.globalProperties.$http = axios;
 
-app.config.globalProperties.$http = Axios;
 
 const token = localStorage.getItem('token')
 if (token) {

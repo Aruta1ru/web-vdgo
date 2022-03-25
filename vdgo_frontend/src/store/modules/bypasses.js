@@ -1,19 +1,23 @@
-import { GET_BYPASSES, GET_BYPASS_COUNT, CHANGE_DATE } from "../mutation-types";
+import { GET_BYPASSES, GET_BYPASS_COUNT, CHANGE_DATE, NEW_BYPASS
+} from "../mutation-types";
 import axios from "axios";
 
 export default {
   state: {
     bypasses: [],
     selectedDate: Date.now(),
-    bypassCount: 0,
+    bypassCount: 0
   },
 
   getters: {
     bypasses: (state) => state.bypasses,
-    bypassCount: (state) => state.bypassCount,
+    bypassCount: (state) => state.bypassCount, 
     selectedDateTxt: (state) => {
         return new Date(state.selectedDate).toLocaleString().slice(0,10)
-    }
+    },
+    selectedDateTime: (state) => { 
+      return new Date((new Date(state.selectedDate).setHours(new Date(state.selectedDate).getHours() - (new Date(state.selectedDate).getTimezoneOffset() / 60)))).toISOString()
+  }
   },
 
   mutations: {
@@ -35,17 +39,37 @@ export default {
         }
         state.bypasses.push(element);
       }
-    },
+    }, 
+    
     [GET_BYPASS_COUNT] (state, bypassCount) {
         state.bypassCount = bypassCount
     },
     [CHANGE_DATE] (state, selectedDate) {
         state.selectedDate = selectedDate
+    }, 
+
+    [NEW_BYPASS](state, data) { 
+        // state.bypasses = []  
+        let newElement = {};
+        newElement.id = data.id;
+        newElement.objectId = data.object.id;
+        newElement.address = data.object.address;
+        newElement.dogType = data.dog_type;
+        newElement.execStatus = data.exec_status;
+        newElement.fixed = data.is_fixed;
+        newElement.undoneReason = data.undone_reason.name_short;
+        switch (data.exec_status) {
+            case 0: newElement.statusText = 'в работе'; break;
+            case 1: newElement.statusText = 'выполнено'; break;
+            case 2: newElement.statusText = 'не выполнено'; break;
+        }
+        state.bypasses.push(newElement);
     }
   },
 
   actions: {
-    async getBypasses({ commit, getters, rootState}) {
+    async getBypasses({ commit, dispatch, getters, rootState}) { 
+      dispatch('showLoadingSpinner')
       try {
         const response = await axios.get(
           "http://127.0.0.1:8000/api/v1/bypasses",
@@ -58,10 +82,63 @@ export default {
         );
         commit(GET_BYPASSES, response.data.results);
         commit(GET_BYPASS_COUNT, response.data.count);
+        dispatch('hideLoadingSpinner')
       } catch (e) {
         console.log(e);
+        dispatch('hideLoadingSpinner')
       }
-    },
+    }, 
+
+  
+    updateStatusDone({dispatch,commit, getters, rootState}, id) {
+      return new Promise((resolve, reject) => {
+          axios({url: `http://127.0.0.1:8000/api/v1/bypasses/${id}/load_data/`,
+      data: {
+            exec_vdgo: 1,
+            id_bypass: id,
+            date_action: getters.selectedDateTime,
+            id_exec: rootState.auth.user.id,
+            id_obj: rootState.vdgoObject.vdgoObject.id,
+            undone_reason: 0
+      }, method: 'POST' })
+      .then(response => { 
+        if (response.status === 200) {
+          commit('NEW_BYPASS', response.data)
+          dispatch('getBypasses')
+          resolve(response) 
+        }
+      })
+      .catch(err => {
+          reject(err)
+      })
+      })
+  },
+
+
+  updateStatusUndone({commit, dispatch, getters, rootState}, id) {
+    return new Promise((resolve, reject) => {
+        axios({url: `http://127.0.0.1:8000/api/v1/bypasses/${id}/load_data/`,
+    data: {
+          exec_vdgo: 2,
+          id_bypass: id,
+          date_action: getters.selectedDateTime,
+          id_exec: rootState.auth.user.id,
+          id_obj: rootState.vdgoObject.vdgoObject.id,
+          undone_reason: rootState.reasons.selectedReason
+    }, method: 'POST' })
+    .then(response => { 
+      if (response.status === 200) {
+        commit('NEW_BYPASS', response.data)
+        dispatch('getBypasses')
+        resolve(response) 
+      }
+    })
+    .catch(err => {
+        reject(err)
+    })
+    })
+},
+
     setDate({commit, dispatch}, selectedDate) {
         commit(CHANGE_DATE, selectedDate)
         dispatch('getBypasses')

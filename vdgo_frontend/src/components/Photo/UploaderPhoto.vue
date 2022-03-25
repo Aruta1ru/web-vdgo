@@ -3,7 +3,7 @@
         
             <div class="card">
                  <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-						<h2 class="p-mb-2 p-m-md-0 p-as-md-center"> Фото </h2>
+						<h2 class="p-mb-2 p-m-md-0 p-as-md-center text-900 font-medium text-xl"> Фото </h2>
                     </div> 
 
     <FileUpload mode="basic" name="demo[]" url="./upload" :auto="true"  :multiple="true" 

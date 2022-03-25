@@ -1,17 +1,21 @@
 <template> 
 
-  <div class= "form-login">
+<div class= "form-login" >
 <div class="p-d-flex p-jc-center">
-            <div class="card">
-                <h2 class="text-center">Авторизация</h2>
-                <form class="p-fluid" @submit.prevent>
+            <div class="card"> 
+                <div class="text-center mb-5"> 
+        <div class="text-900 text-2xl font-medium mb-3">Авторизация</div>
+        <span class="text-600 font-medium line-height-3">Нет учетной записи?</span>
+        <a class="font-medium no-underline ml-2 text-blue-500">Обратитесь к администратору!</a>
+    </div>
+                <form class="p-fluid" @submit.prevent="login" >
                     <div class="p-field">
                         <div class="p-float-label p-input-icon-right">
                             <i class="pi pi-user" />
                                           <InputText
                 id="username"
                 autocomplete="username"
-                v-model="username"
+                v-model="username" 
               />
                             <label for="username">Имя пользователя</label>
                         </div>
@@ -27,15 +31,19 @@
               />
                             <label for="password">Пароль</label>
                         </div>
-                    </div>
+                    </div> 
                     <Button @click="login"
             icon="pi pi-sign-in"
-            label=" Войти в систему "
+            label=" Войти в систему"
+            class="w-full"
           />
-                </form>
+                </form> 
+               
             </div>
-        </div>
-        </div>
+        </div> 
+        </div> 
+
+    
            
 </template>
 
@@ -45,6 +53,7 @@
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
+
 export default {
 components: {  
 Button,
@@ -55,23 +64,25 @@ Password
  data() {
     return {
       username: "",
-      password: "",
-    };
+      password: ""
+    }
     },
 
-    methods: {
+    methods: { 
 
     login() {
-        let username = this.username
-        let password = this.password
+        let username = this.username;
+        let password = this.password;
         this.$store.dispatch('login', { username, password })
-        .then(() => this.$router.push("/"))
-        .catch(err => console.log(err))
+        .then(() => { 
+            this.$router.push('/')
+            this.$toast.add({severity:'success', summary:'Авторизация', detail:'Успешно', life: 3000})})
+        .catch(err => { 
+            this.$toast.add({severity:'error', summary:'Авторизация', detail:'Ошибка', life: 3000})
+            console.log(err)
+        });
     }
-
-    }
-
-
+    }    
 }
 </script>
 

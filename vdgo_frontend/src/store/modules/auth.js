@@ -5,7 +5,8 @@ import { LOGOUT,
          SET_REGISTER_EXECUTOR,
          SET_REGISTER_USERNAME,
          SET_REGISTER_PASSWORD,
-         SET_USER_PROFILE } from '../mutation-types'
+         SET_USER_PROFILE
+        } from '../mutation-types'
 import axios from 'axios'
 
 export default {
@@ -21,10 +22,12 @@ state: {
     user: {}
 },
 
-getters: {
+getters: { 
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
-    userProfile: state => state.user,
+    userProfile: state => state.user, 
+    isUser: state => state.user.role === 'user',
+    isAdmin: state => state.user.role === 'admin',
     roleText: state => {
         if (state.user.role === 'user') return 'Пользователь'
         else if (state.user.role === 'admin') return 'Администратор'
@@ -62,24 +65,30 @@ mutations:{
         state.user.unit = profile.executor.unit.name_short
         state.user.role = profile.role
         state.user.id = profile.executor.id
-    }
+    },
+
 }, 
  
 actions: {
-    login({commit}, user) {
+    login({commit, dispatch}, user) {
         return new Promise((resolve, reject) => {
-            commit('AUTH_REQUEST')
+            commit('AUTH_REQUEST') 
+            dispatch('showLoadingSpinner')
             axios({url: 'http://127.0.0.1:8000/api/v1/token/',
         data: user, method: 'POST' })
         .then(response => {
             const token = response.data.access
             localStorage.setItem('token', token)
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-            commit('AUTH_SUCCESS', token, user)
+            commit('AUTH_SUCCESS', token, user) 
             resolve(response)
-        })
-        .catch(err => {
+            dispatch('hideLoadingSpinner')      
+        }
+        
+        )
+        .catch(err => { 
             commit('AUTH_ERROR')
+            dispatch('hideLoadingSpinner')
             localStorage.removeItem('token')
             reject(err)
         })
@@ -97,15 +106,17 @@ actions: {
         })
         })
     },
-    logout({commit}) {
+    logout({commit, dispatch}) {
         return new Promise((resolve) => {
             commit('LOGOUT')
+            dispatch('showLoadingSpinner')
             localStorage.removeItem('token')
             delete axios.defaults.headers.common['Authorization']
             resolve()
+            dispatch('hideLoadingSpinner')
         })
     },
-    async loadUserProfile({commit, dispatch}) {
+    async loadUserProfile({commit, dispatch}) { 
         try {
             const response = await axios.get(
                 'http://127.0.0.1:8000/api/v1/users/profile/'

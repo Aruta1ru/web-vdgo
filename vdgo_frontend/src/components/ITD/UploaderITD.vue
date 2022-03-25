@@ -1,7 +1,7 @@
 <template>
             <div class="card"> 
                 <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-						<h2 class="p-mb-2 p-m-md-0 p-as-md-center"> Инженерно-техническая документация </h2>
+					<h2 class="p-mb-2 p-m-md-0 p-as-md-center text-900 font-medium text-xl"> Инженерно-техническая документация </h2>
                     </div>
             <div class="flex justify-content-between mb-3">
                 

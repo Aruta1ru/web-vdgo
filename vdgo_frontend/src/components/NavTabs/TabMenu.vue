@@ -2,10 +2,9 @@
 
 
         <div class="card "> 
-            <h3> Объект {{ this.address }} </h3>
+            <h3 class="text-900 font-medium text-l text-center"> {{ this.address }} </h3>
             <TabMenu :model="items" /> 
         </div>  
-        
             <router-view></router-view>
             
 </template>

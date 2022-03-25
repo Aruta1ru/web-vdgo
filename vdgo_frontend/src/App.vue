@@ -1,11 +1,13 @@
 <template>
-  <Toast />
-  <ScrollTop :threshold="150" />
-  <Menubar :userProfile="userProfile" />
 
   <div class="layout-main-container">
-    <div class="layout-main">
-      <router-view></router-view>
+    <div class="layout-main"> 
+        <Toast/>
+        <LoadingSpinner/>             
+      <ScrollTop :threshold="150" />
+      <Menubar/>  
+    <router-view></router-view>
+    
     </div>
   </div>
 </template>
@@ -14,38 +16,18 @@
 
 import ScrollTop from 'primevue/scrolltop';
 import Menubar from './components/AppTopBar/Menubar.vue'
+import LoadingSpinner from './components/Loaders/LoadingSpinner.vue';
 import Toast from 'primevue/toast'
-import {mapActions, mapGetters} from "vuex"
 
 export default {
   name: 'App',
   components: {
     ScrollTop,
     Menubar,
+    LoadingSpinner,
     Toast
-  },
-
-  computed: {
-    ...mapGetters({
-      isLoggedIn: "isLoggedIn",
-      userProfile: "userProfile"
-    })
   }, 
 
-  methods: {
-    ...mapActions({
-      loadUserProfile: "loadUserProfile",
-      loadReasons: "loadReasons"
-    }),
-  },
-
-  mounted() {
-    if (this.isLoggedIn) {
-      this.loadUserProfile()
-      this.loadReasons()
-    } 
-
-  },
 
   created() {
     this.$http.interceptors.response.use(undefined, function (err) {
@@ -56,8 +38,8 @@ export default {
         throw err;
       })
 
-    });
-  },
-
+    }); 
   }
+}
 </script>
+

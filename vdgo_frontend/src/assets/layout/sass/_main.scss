@@ -24,3 +24,12 @@ a {
     text-decoration: none;
     color: var(--primary-color);
 }
+
+/* Медиазапрос, уменьшающий размер шрифта при отображения на мобильных устройствах с шириной экрана */
+@media screen and (max-width: 830px) {
+  html {
+      font-size: 78.25%;
+    }  
+}
+
+

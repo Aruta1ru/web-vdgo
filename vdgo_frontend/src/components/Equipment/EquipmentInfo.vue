@@ -3,7 +3,7 @@
 <div class="card"> 
 
  <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-						<h2 class="p-mb-2 p-m-md-0 p-as-md-center"> Оборудование </h2>
+						<h2 class="p-mb-2 p-m-md-0 p-as-md-center text-900 font-medium text-xl"> Оборудование </h2>
 						<span class="p-input-icon-left">
                             <i class="pi pi-search p-input-icon-left" />
                             <InputText style="width: 10em" v-model="filters['global'].value" placeholder="Поиск" />
@@ -77,10 +77,13 @@ beforeMount () {
 
 
 <!--Медиазапрос, который уменьшает размер шрифта в таблице, при отображении на мобильном устройстве-->
-<style lang="scss" scoped>
- @media screen and (max-width: 500px) {
+
+<!--@media screen and (max-width: 500px) {
         .p-datatable {
             font-size: 0.8rem
         }
-    }
+    }-->
+    
+<style lang="scss" scoped>
+ 
 </style>

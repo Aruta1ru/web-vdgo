@@ -1,20 +1,27 @@
-import { GET_REASONS } from '../mutation-types'
+import { GET_REASONS,SET_REASON } from '../mutation-types'
 import axios from "axios"
 
 export default {
 
 state: {
-    reasons: []
+    reasons: [],
+    selectedReason: null
 },
 
 getters: {
-    reasons: state => state.reasons
+    reasons: state => state.reasons,
+    selectedReason: state => state.selectedReason
 },
 
 mutations:{
     [GET_REASONS] (state, reasons) {
         state.reasons = reasons
       },
+
+      [SET_REASON] (state, selectedReason) {
+        state.selectedReason = selectedReason
+    }
+
     }, 
  
 actions: {
@@ -27,6 +34,10 @@ actions: {
     } catch (e) {
         console.log(e)
     }
+}, 
+
+setReason({commit}, selectedReason) {
+    commit(SET_REASON, selectedReason)
 }
 }      
 }

@@ -12,7 +12,6 @@ export default {
   name: 'LoginPage',
   components: {
     Login
-   
   },
 }
 </script>
