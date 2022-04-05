@@ -5,7 +5,7 @@
         <Toast/>
         <LoadingSpinner/>             
       <ScrollTop :threshold="150" />
-      <Menubar/>  
+      <TopBar/>  
     <router-view></router-view>
     
     </div>
@@ -15,7 +15,7 @@
 <script>
 
 import ScrollTop from 'primevue/scrolltop';
-import Menubar from './components/AppTopBar/Menubar.vue'
+import TopBar from './components/AppTopBar/TopBar.vue'
 import LoadingSpinner from './components/Loaders/LoadingSpinner.vue';
 import Toast from 'primevue/toast'
 
@@ -23,7 +23,7 @@ export default {
   name: 'App',
   components: {
     ScrollTop,
-    Menubar,
+    TopBar,
     LoadingSpinner,
     Toast
   }, 
@@ -42,4 +42,3 @@ export default {
   }
 }
 </script>
-

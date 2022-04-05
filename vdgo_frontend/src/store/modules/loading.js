@@ -1,5 +1,5 @@
 import { LOADING_SPINNER_SHOW_MUTATION, 
-    LOADING_SPINNER_HIDE_MUTATION } from "../mutation-types"
+    LOADING_SPINNER_HIDE_MUTATION } from "../mutation-types.js"
 
 
 export default {

@@ -11,30 +11,31 @@
                 <div class="card mb-0">
                   <div class="flex justify-content-between mb-3">
           <div>
-            <h3 class="block text-500 font-medium mb-3"> Тип договора </h3>
-            <div class="text-900 font-medium text-lg"> {{ dogType }} </div> 
-          <div class="mt-2 mb-2">
-                <Inplace :closable="true" @close="updatePhone(idObject,setPhone(this.newPhone))"> 
-      <!--После того как появятся события по измененеию телефона
-<Inplace :closable="true" @close="savePhone"> -->
+            <h3 class="block text-500 font-medium mb-2"> Тип договора </h3>
+            <div class="text-900 font-medium text-lg"> {{ dogType }} </div>
+          <h3 class="block text-500 font-medium mb-2"> Телефон </h3>   
+          <div >
+                <Inplace :closable="true"> 
     <template #display>
-        Телефон: {{ phoneVdgo }}
+        {{ phoneVdgo }}
     </template>
     <template #content>
         <InputMask v-model="newPhone" mask="9 (999) 999-9999" :placeholder="phoneVdgo" />
+    <Button icon="pi pi-check" class="p-button-success" @click="updatePhone(idObject,setPhone(this.newPhone))"/>
     </template>
 </Inplace>
                     
         </div> 
-              <div class="mt-2 mb-2"> 
-<Inplace :closable="true" @close="updateEmail(idObject,setEmail(this.newEmail))"> 
-<!--После того как появятся события по измененеию email
-<Inplace :closable="true" @close="saveEmail"> -->
+              <h3 class="block text-500 font-medium mb-2"> Адрес электронной почты </h3> 
+              <div > 
+<Inplace :closable="true"> 
+
     <template #display>
-        Адрес электронной почты: {{ emailVdgo }}
+        {{ emailVdgo }}
     </template>
     <template #content>
         <InputText :placeholder="emailVdgo" v-model="newEmail" />
+        <Button icon="pi pi-check" class="p-button-success" @click="updateEmail(idObject,setEmail(this.newEmail))"/>
     </template>
 </Inplace>       
                 </div>      
@@ -113,7 +114,7 @@ import Column from 'primevue/column'
 import Badge from 'primevue/badge'
 import { mapGetters, mapActions } from 'vuex'
 import Inplace from 'primevue/inplace'
-
+import Button from 'primevue/button'
 
 export default {
 
@@ -124,6 +125,7 @@ components:{
   DataTable,
   Column,
   Badge,
+  Button,
   Inplace
   
  }, 

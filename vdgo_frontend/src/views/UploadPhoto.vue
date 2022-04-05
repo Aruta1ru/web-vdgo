@@ -13,6 +13,10 @@ export default {
   components: {
     UploaderPhoto
    
+  },
+
+  created () {
+    this.$store.dispatch('getImages') 
   }
 }
 </script>

@@ -1,4 +1,4 @@
-import { GET_REASONS,SET_REASON } from '../mutation-types'
+import { GET_REASONS,SET_REASON } from '../mutation-types.js'
 import axios from "axios"
 
 export default {

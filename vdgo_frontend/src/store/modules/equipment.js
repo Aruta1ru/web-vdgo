@@ -1,6 +1,5 @@
-import { EquipmentService } from '../../api/EquipmentService' 
-import { GET_EQUIPMENT } from '../mutation-types'
-
+import { GET_EQUIPMENT } from '../mutation-types.js'
+import axios from 'axios'
 export default {
 
 state: {
@@ -12,16 +11,30 @@ getters: {
 },
 
 mutations:{
-    [GET_EQUIPMENT] (state, {equipment}) {
+    [GET_EQUIPMENT] (state, equipment) {
         state.equipment = equipment
       }
     }, 
  
 actions: {
-    getEquipment ({ commit }) {
-        EquipmentService.list().then(equipment => {
-          commit(GET_EQUIPMENT, { equipment })
-        })
-      },
-}      
+  async loadEquipment ({ commit, dispatch, rootState }) { 
+    dispatch('showLoadingSpinner') 
+  try {
+    const response = await axios.get(
+        `http://127.0.0.1:8000/api/v1/equipment/`, {
+          params: {
+            object:  rootState.vdgoObject.vdgoObject.id
+         }
+        }
+        
+    )
+    commit(GET_EQUIPMENT, response.data)
+    dispatch('hideLoadingSpinner')
+} catch (e) {
+    dispatch('hideLoadingSpinner')
+    console.log(e)
+}
+  }
+}
+
 }

@@ -1,14 +1,14 @@
 import { createStore } from 'vuex' 
-import vdgoObject from "./modules/vdgoObject";
+import vdgoObject from "./modules/vdgoObject.js";
 import auth from "@/store/modules/auth"
 import bypasses from "@/store/modules/bypasses"
-import equipment from "./modules/equipment"
+import equipment from "./modules/equipment.js"
 import units from "@/store/modules/units"
-import executors from "./modules/executors"
-import images from "./modules/images"
-import itd from "./modules/itd"
-import reasons from "./modules/reasons"
-import loading  from './modules/loading';
+import executors from "./modules/executors.js"
+import images from "./modules/images.js"
+import itd from "./modules/itd.js"
+import reasons from "./modules/reasons.js"
+import loading  from './modules/loading.js';
 import createPersistedState from "vuex-persistedstate";
 import SecureLS from "secure-ls";
 var ls = new SecureLS({ isCompression: false });

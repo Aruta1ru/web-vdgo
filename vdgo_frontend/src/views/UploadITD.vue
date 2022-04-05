@@ -13,6 +13,12 @@ export default {
   components: {
     UploaderITD
    
+  },
+
+created () {
+    this.$store.dispatch('loadITD') 
   }
+
+
 }
 </script>

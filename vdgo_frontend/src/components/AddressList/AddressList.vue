@@ -1,7 +1,7 @@
 <template> 
 
 <div v-if="bypasses" class="card"> 
- <Calendar/> 
+ <SelectDate/> 
  <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
 						<h2 class="p-mb-2 p-m-md-0 p-as-md-center text-900 font-medium text-xl"> Адреса </h2>
 						<span class="p-input-icon-left">
@@ -55,12 +55,12 @@
 </template>
 
 <script>
-import Badge from 'primevue/badge';
+import Badge from 'primevue/badge'
 import DataTable from 'primevue/datatable'
-import { FilterMatchMode } from 'primevue/api';
+import { FilterMatchMode } from 'primevue/api'
 import Column from 'primevue/column' 
 import InputText from 'primevue/inputtext' 
-import Calendar from './Calendar.vue'
+import SelectDate from './SelectDate.vue'
 import Button from 'primevue/button'
 import ReasonsSelector from './ReasonsSelector.vue' 
 import {mapActions, mapGetters} from "vuex"
@@ -70,7 +70,7 @@ export default {
   DataTable,
   Column,
   InputText,
-  Calendar,
+  SelectDate,
   Badge,
   Button,
   ReasonsSelector
@@ -91,7 +91,8 @@ computed: {
   ...mapGetters({
     bypasses: "bypasses",
     bypassCount: "bypassCount",
-    selectedDateTxt: "selectedDateTxt"
+    selectedDateTxt: "selectedDateTxt",
+    bypassDate: "bypassDate"
   })
 },
 

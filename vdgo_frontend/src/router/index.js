@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import store from '../store'
-const Home = () => import('../views/Home.vue')
+import  store  from '../store/index.js'
+const HomePage = () => import('../views/HomePage.vue')
 const UploadPhoto = () => import('../views/UploadPhoto.vue')
 const UploadITD = () => import('../views/UploadITD.vue')
-const Client = () => import('../views/Client.vue')
-const Equipment = () => import('../views/Equipment.vue')
+const ClientPage = () => import('../views/ClientPage.vue')
+const EquipmentPage = () => import('../views/EquipmentPage.vue')
 const LoginPage = () => import('../views/LoginPage.vue')
 const RegistryPage = () => import('../views/RegistryPage.vue')
 const TabMenu = () => import('../views/TabMenu.vue')
@@ -36,8 +36,8 @@ const routes = [
 
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'HomePage',
+    component: HomePage,
     meta: { 
       requiresAuth: true,
     }
@@ -46,7 +46,7 @@ const routes = [
   {
     path:'/tabs/',
     redirect:'/tabs/client',
-    name: 'TabMenu',
+    name: 'TabMenuPage',
     component: TabMenu,
     meta: { 
       requiresAuth: true
@@ -55,13 +55,13 @@ const routes = [
     children: [
       {
         path: 'client',
-        name: 'Client',
-        component: Client
+        name: 'ClientPage',
+        component: ClientPage
       }, 
       {
         path:'equipment',
-        name: 'Equipment',
-        component: Equipment
+        name: 'EquipmentPage',
+        component: EquipmentPage
       }, 
       {
         path:'gallery',    

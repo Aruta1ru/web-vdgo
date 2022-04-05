@@ -1,17 +1,17 @@
 <template>
   <div class="registry">
-    <Registry/> 
+    <RegistryForm/> 
     
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import Registry from '@/components/Auth/Registry.vue'
+import RegistryForm from '@/components/Auth/RegistryForm.vue'
 export default {
   name: 'RegistryPage',
   components: {
-    Registry
+    RegistryForm
    
   }
 }

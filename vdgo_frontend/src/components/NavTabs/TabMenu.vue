@@ -6,7 +6,6 @@
             <TabMenu :model="items" /> 
         </div>  
             <router-view></router-view>
-            
 </template>
 
 <script> 
@@ -15,7 +14,8 @@ import TabMenu from 'primevue/tabmenu';
 import { mapGetters } from 'vuex';
 export default { 
     components: {
-        TabMenu
+        TabMenu,
+        
         },
 
     computed: {

@@ -20,17 +20,25 @@
   dataKey="id"
   class="p-datatable-sm">
                
-                <Column field="type" header="Тип" :sortable="true"></Column>
-                <Column field="brand" header="Изготовитель" :sortable="true"></Column>
-                <Column field="model" header="Модель" :sortable="true"></Column>
-                <Column field="quantity" header="Количество" :sortable="true"></Column>
-                <Column field="percent" header="Доля" :sortable="true"></Column>
-                <Column :exportable="false" style="min-width:8rem">
+                <Column bodyStyle="width:60%" field="type.name" header="Тип" :sortable="true"></Column>
+                <Column bodyStyle="width:12%" field="manufacturer.name" header="Изготовитель" :sortable="true"></Column>
+                <Column bodyStyle="width:12%" field="equipment_model.name" header="Модель" :sortable="true"></Column>
+                <Column bodyStyle="width:9%" field="quantity" header="Количество" :sortable="true"></Column>
+                <Column bodyStyle="width:7%" field="part" header="Доля" :sortable="true"></Column>
+                
+                       </DataTable> 
+
+<!--Когда будет редактирование параметров оборудования вставить после 
+<Column field="part" header="Доля" :sortable="true"></Column>, 
+вот такой кусок кода для открытия модального окна с параметрами
+<Column :exportable="false" style="min-width:8rem">
                     <template #body>
     <DialogEdit />
                     </template>
-                </Column>
-                       </DataTable>
+                </Column>-->
+
+
+
                        </div> 	
 </template>
 
@@ -41,23 +49,26 @@ import { FilterMatchMode } from 'primevue/api';
 import Column from 'primevue/column' 
 import InputText from 'primevue/inputtext' 
 import { mapGetters } from 'vuex'
-import DialogEdit from './DialogEdit.vue'
+//import DialogEdit from './DialogEdit.vue'
 export default {
 
   components:{
   DataTable,
   Column,
   InputText,
-  DialogEdit
+  //DialogEdit
 
   },
-  created() {
-        
+  
+created() {
  this.initFilters();
         
     },
 
-computed: mapGetters(['equipment']),
+computed: mapGetters({
+    'equipment': 'equipment'
+    }),
+
 data() {
         return {
          filters:{}
@@ -69,20 +80,10 @@ methods: {
                     }}            
                     },
 
-beforeMount () {
-    this.$store.dispatch('getEquipment')
-  }
 }
 </script>              
 
 
-<!--Медиазапрос, который уменьшает размер шрифта в таблице, при отображении на мобильном устройстве-->
-
-<!--@media screen and (max-width: 500px) {
-        .p-datatable {
-            font-size: 0.8rem
-        }
-    }-->
     
 <style lang="scss" scoped>
  

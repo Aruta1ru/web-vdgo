@@ -9,7 +9,7 @@
 // @ is an alias to /src
 import TabMenu from '@/components/NavTabs/TabMenu.vue'
 export default {
-  name: 'Tabs',
+  name: 'TabMenuPage',
   components: {
     TabMenu
    

@@ -1,5 +1,5 @@
 import { GET_BYPASSES, GET_BYPASS_COUNT, CHANGE_DATE, NEW_BYPASS
-} from "../mutation-types";
+} from "../mutation-types.js";
 import axios from "axios";
 
 export default {
@@ -13,11 +13,16 @@ export default {
     bypasses: (state) => state.bypasses,
     bypassCount: (state) => state.bypassCount, 
     selectedDateTxt: (state) => {
-        return new Date(state.selectedDate).toLocaleString().slice(0,10)
+        return new Date(state.selectedDate).toLocaleDateString().slice(0,10)
     },
     selectedDateTime: (state) => { 
       return new Date((new Date(state.selectedDate).setHours(new Date(state.selectedDate).getHours() - (new Date(state.selectedDate).getTimezoneOffset() / 60)))).toISOString()
+  },
+
+  bypassDate: (state) => {
+    return new Date((new Date(state.selectedDate).setHours(new Date(state.selectedDate).getHours() - (new Date(state.selectedDate).getTimezoneOffset() / 60)))).toISOString().slice(0,10)
   }
+
   },
 
   mutations: {
@@ -30,6 +35,7 @@ export default {
         element.address = bypass.object.address;
         element.dogType = bypass.dog_type;
         element.execStatus = bypass.exec_status;
+        element.dateAction = bypass.date_action
         element.fixed = bypass.is_fixed;
         element.undoneReason = bypass.undone_reason.name_short;
         switch (bypass.exec_status) {
@@ -55,6 +61,7 @@ export default {
         newElement.objectId = data.object.id;
         newElement.address = data.object.address;
         newElement.dogType = data.dog_type;
+        newElement.dateAction = data.date_action
         newElement.execStatus = data.exec_status;
         newElement.fixed = data.is_fixed;
         newElement.undoneReason = data.undone_reason.name_short;

@@ -6,34 +6,61 @@
 						<h2 class="p-mb-2 p-m-md-0 p-as-md-center text-900 font-medium text-xl"> Фото </h2>
                     </div> 
 
-    <FileUpload mode="basic" name="demo[]" url="./upload" :auto="true"  :multiple="true" 
-                accept="image/*"  :maxFileSize="1000000" chooseLabel="Добавить"/>
+
+
+  
+
+<FormKit id="myForm" type="form" @submit="uploadImage">
+<FormKit  type="file" label="Выбор изображений для загрузки" 
+name="files" accept="image/*" multiple />
+</FormKit>  
+              
 
                 <div class="mt-3"> 
-                <Gallery/>
+                <PhotoGallery/>
+                </div> 
+
                 </div>
-                </div>
-                
-
-
-
-   
 </template>
 
 <script> 
-import FileUpload from 'primevue/fileupload'
-import Gallery from './Gallery.vue'
 
+import PhotoGallery from './PhotoGallery.vue'
+import { mapActions } from 'vuex'
 export default { 
     components: {
-        FileUpload,
-        Gallery
+        PhotoGallery
+        
+    }, 
+    
+
+    methods: { 
+
+        ...mapActions({
+            uploadPhoto: "uploadPhoto"
+        }),    
+
+   async uploadImage (data) { 
+       await new Promise((r) => setTimeout(r, 1000)) 
+        let fd = new FormData()
+        data.files.forEach((fileItem) => {
+        let category = 0;     
+        fd.append('files', fileItem.file)
+        fd.append("file_category", category)
+        fd.append("object",this.$store.state.vdgoObject.vdgoObject.id )
+        fd.append("bypass_date", this.$store.getters.bypassDate)
+        })
+        this.uploadPhoto(fd)
     },
 
-    methods: {
-        onUpload() {
-            this.$toast.add({severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000});
-        }
-    },
+
+
+
 }
-</script>
+}
+</script> 
+
+
+<style scoped lang="scss">
+
+</style>

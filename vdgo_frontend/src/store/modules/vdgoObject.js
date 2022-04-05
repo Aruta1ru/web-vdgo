@@ -1,5 +1,5 @@
 import { GET_OBJECT, GET_OBJECT_DOG_TYPE, SET_NEW_EMAIL_VDGO,
-SET_NEW_PHONE_VDGO } from '../mutation-types'
+SET_NEW_PHONE_VDGO } from '../mutation-types.js'
 import axios from "axios"
 
 export default {

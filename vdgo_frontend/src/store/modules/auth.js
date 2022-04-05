@@ -1,12 +1,12 @@
-import { AUTH_REQUEST } from '../mutation-types'
-import { AUTH_SUCCESS } from '../mutation-types'
-import { AUTH_ERROR } from '../mutation-types'
+import { AUTH_REQUEST } from '../mutation-types.js'
+import { AUTH_SUCCESS } from '../mutation-types.js'
+import { AUTH_ERROR } from '../mutation-types.js'
 import { LOGOUT,
          SET_REGISTER_EXECUTOR,
          SET_REGISTER_USERNAME,
          SET_REGISTER_PASSWORD,
          SET_USER_PROFILE
-        } from '../mutation-types'
+        } from '../mutation-types.js'
 import axios from 'axios'
 
 export default {
@@ -108,8 +108,8 @@ actions: {
     },
     logout({commit, dispatch}) {
         return new Promise((resolve) => {
-            commit('LOGOUT')
             dispatch('showLoadingSpinner')
+            commit('LOGOUT')
             localStorage.removeItem('token')
             delete axios.defaults.headers.common['Authorization']
             resolve()
