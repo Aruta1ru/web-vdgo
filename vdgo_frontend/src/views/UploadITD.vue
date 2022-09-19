@@ -6,19 +6,22 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 import UploaderITD from '@/components/ITD/UploaderITD.vue'
+import { mapActions } from 'vuex'
 export default {
   name: 'UploadITD',
   components: {
     UploaderITD
    
+  }, 
+
+  methods: {
+    ...mapActions(['loadITD'])
   },
 
-created () {
-    this.$store.dispatch('loadITD') 
+  created() {
+    this.loadITD() 
   }
-
-
 }
 </script>

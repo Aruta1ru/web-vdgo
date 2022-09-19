@@ -17,21 +17,22 @@ mutations:{
     }, 
  
 actions: {
-  async loadEquipment ({ commit, dispatch, rootState }) { 
-    dispatch('showLoadingSpinner') 
+  async loadEquipment ({ commit,dispatch, rootGetters }) { 
+    dispatch('showLoadingSpinner')  
   try {
     const response = await axios.get(
         `http://127.0.0.1:8000/api/v1/equipment/`, {
           params: {
-            object:  rootState.vdgoObject.vdgoObject.id
+            object:  rootGetters.idObject
          }
         }
-        
-    )
+)
     commit(GET_EQUIPMENT, response.data)
     dispatch('hideLoadingSpinner')
 } catch (e) {
     dispatch('hideLoadingSpinner')
+    alert('Ошибка' + ' ' + e.response.status 
+            + ' ' + e.message) 
     console.log(e)
 }
   }

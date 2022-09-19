@@ -32,6 +32,8 @@ actions: {
         )
         commit(GET_REASONS, response.data)
     } catch (e) {
+        alert('Ошибка' + ' ' + e.response.status 
+            + ' ' + e.message) ;
         console.log(e)
     }
 }, 

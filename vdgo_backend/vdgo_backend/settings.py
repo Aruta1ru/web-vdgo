@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'vdgo_backend.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": 'sql_server.pyodbc',
+        "ENGINE": 'mssql',
         "NAME": env.str('DB_NAME'),
         "USER": env.str('DB_USER'),
         "PASSWORD": env.str('DB_PASSWORD'),
@@ -134,7 +134,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
     ],
     'NON_FIELD_ERRORS_KEY': 'error',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

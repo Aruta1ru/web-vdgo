@@ -1,5 +1,7 @@
-import { GET_OBJECT, GET_OBJECT_DOG_TYPE, SET_NEW_EMAIL_VDGO,
-SET_NEW_PHONE_VDGO } from '../mutation-types.js'
+import { GET_OBJECT, GET_OBJECT_DOG_TYPE, SET_NEW_EMAIL_VDGO, 
+UPDATE_EMAIL_VDGO,
+SET_NEW_PHONE_VDGO,
+UPDATE_PHONE_VDGO } from '../mutation-types.js'
 import axios from "axios"
 
 export default {
@@ -41,20 +43,29 @@ mutations:{
         state.newEmailVdgo = newEmailVdgo
     }, 
 
+    [UPDATE_EMAIL_VDGO] (state) {
+        state.vdgoObject.email_vdgo = state.newEmailVdgo
+    },
+
     [SET_NEW_PHONE_VDGO]  (state, newPhoneVdgo) {
         state.newPhoneVdgo = newPhoneVdgo
-    }
+    },
+    
+    [UPDATE_PHONE_VDGO] (state) {
+        state.vdgoObject.phone_vdgo = state.newPhoneVdgo
+        },
+
     }, 
  
 actions: {
-    async loadObject ({ commit, dispatch }, id) { 
-        dispatch('showLoadingSpinner') 
+    async loadObject ({ dispatch, commit}, id) { 
+        dispatch('showLoadingSpinner')  
       try {
         const response = await axios.get(
             `http://127.0.0.1:8000/api/v1/vdg_objects/${id}/`
         )
         commit(GET_OBJECT, response.data)
-        dispatch('hideLoadingSpinner')
+        dispatch('hideLoadingSpinner')    
     } catch (e) {
         dispatch('hideLoadingSpinner')
         console.log(e)
@@ -71,13 +82,13 @@ actions: {
 
         }, method: 'PUT' })
         .then(response => { 
-          if (response.status === 200) {
-            commit('SET_NEW_EMAIL_VDGO', response.data)
-            dispatch('loadObject', id)
+            if (response.status === 200) {
+            commit('UPDATE_EMAIL_VDGO', response.data)
             resolve(response) 
-          }
+            }
         })
         .catch(err => {
+            dispatch('catchError', err) 
             reject(err)
         })
         })
@@ -94,12 +105,12 @@ actions: {
         }, method: 'PUT' })
         .then(response => { 
           if (response.status === 200) {
-            commit('SET_NEW_PHONE_VDGO', response.data)
-            dispatch('loadObject', id)
+            commit('UPDATE_PHONE_VDGO', response.data)
             resolve(response) 
           }
         })
         .catch(err => {
+            dispatch('catchError', err) 
             reject(err)
         })
         })
@@ -118,4 +129,5 @@ actions: {
     }
 }      
 }
+
 

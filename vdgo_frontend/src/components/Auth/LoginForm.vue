@@ -8,7 +8,7 @@
         <span class="text-600 font-medium line-height-3">Нет учетной записи?</span>
         <a class="font-medium no-underline ml-2 text-blue-500">Обратитесь к администратору!</a>
     </div>
-                <form class="p-fluid" @submit.prevent="login" >
+                <form class="p-fluid" @submit.prevent="onLogin" >
                     <div class="p-field">
                         <div class="p-float-label p-input-icon-right">
                             <i class="pi pi-user" />
@@ -32,7 +32,7 @@
                             <label for="password">Пароль</label>
                         </div>
                     </div> 
-                    <Button @click="login"
+                    <Button @click="onLogin"
             icon="pi pi-sign-in"
             label=" Войти в систему"
             class="w-full"
@@ -42,8 +42,6 @@
             </div>
         </div> 
         </div> 
-
-    
            
 </template>
 
@@ -53,7 +51,7 @@
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Password from 'primevue/password';
-
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
 components: {  
@@ -69,41 +67,27 @@ Password
     }
     },
 
+    computed:{
+        ...mapGetters(['errorMessage', 'errorStatus'])
+    },
+
     methods: { 
-      
-    login() {
+    ...mapActions(['login']),
+    
+    onLogin() {
         let username = this.username;
         let password = this.password;
-        this.$store.dispatch('login', { username, password })
-        .then(() => { 
-            this.$router.push('/')
-            this.$toast.add({severity:'success', summary:'Авторизация', detail:'Успешно', life: 3000})})
-        .catch(err => { 
-            this.$toast.add({severity:'error', summary:'Авторизация', detail:'Ошибка', life: 3000})
-            console.log(err)
-        });
+        this.login({ username, password })
+        .then(() => {
+            this.$router.push('/') 
+            this.$toast.add({severity:'success', summary:'Авторизация', detail:'Успешно', life: 3000})} 
+        )
+        .catch(() => {
+             this.$toast.add({severity:'error', summary:'Ошибка' + ' ' + this.errorStatus, 
+             detail: this.errorMessage, life: 3000}) 
+        }
+        );
     }
     }    
 }
 </script>
-
-<style lang="scss" scoped>
-
-.form-login {
-    .card {
-        width: 25rem;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-
-        form {
-            margin-top: 2rem;
-        }
-
-        .p-field {
-            margin-bottom: 2rem;
-        }
-    }
-}
-
-</style>

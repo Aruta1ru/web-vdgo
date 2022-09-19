@@ -6,7 +6,7 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 import EquipmentInfo from '@/components/Equipment/EquipmentInfo.vue'
 import { mapActions } from 'vuex'
 
@@ -16,14 +16,13 @@ export default {
     EquipmentInfo  
   },
 
-methods: {
-  ...mapActions({
-    getEquipment: "loadEquipment"
-  })
-},
+  methods: {
+    ...mapActions(['loadEquipment'])
+  },
 
-created() {
-  this.getEquipment()
+
+  created() {
+  this.loadEquipment()  
 }
 
 }

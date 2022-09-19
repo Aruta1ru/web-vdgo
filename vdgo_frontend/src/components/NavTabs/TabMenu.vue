@@ -1,6 +1,4 @@
  <template>
-
-
         <div class="card "> 
             <h3 class="text-900 font-medium text-l text-center"> {{ this.address }} </h3>
             <TabMenu :model="items" /> 
@@ -19,9 +17,7 @@ export default {
         },
 
     computed: {
-        ...mapGetters({
-            address: "address",
-        })
+        ...mapGetters(['address'])
     },
 
     data() {

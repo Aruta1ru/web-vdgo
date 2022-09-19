@@ -7,7 +7,10 @@ import axios from 'axios';
 import store  from "./store/index.js";
 import router  from "./router/index.js";
 import PrimeVue from 'primevue/config';
-import 'primevue/resources/themes/saga-blue/theme.css';
+//import 'primevue/resources/themes/mdc-light-indigo/theme.css';
+//import 'primevue/resources/themes/tailwind-light/theme.css';
+import 'primevue/resources/themes/lara-light-blue/theme.css';
+//import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.css';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css'; 
@@ -39,17 +42,17 @@ app.use(PrimeVue,
            clear:'Очистить' }
         }, 
     
-    {ripple: false}, 
+    { ripple: false }, 
 );
 
 app.use(router)
 app.use(store)
+
 app.directive('badge', BadgeDirective);
 app.directive('styleclass', StyleClass);
 app.use(ToastService)
 app.use(plugin, defaultConfig({
     locales: { ru },
-    // Define the active locale
     locale: 'ru',
 }) )
 app.mount('#app')

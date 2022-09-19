@@ -1,12 +1,12 @@
 <template>
-  <div class="form-registry">
-    <div class="p-d-flex p-jc-center">
-      <div class="card"> 
-        <div class="text-center mb-5"> 
-        <div class="text-900 text-2xl font-medium mb-3">Регистрация</div>
-    </div>
+<Dialog v-model:visible="addUserDialog"  header="Регистрация нового пользователя"  :modal="true" class="p-fluid" dismissableMask
+:style="{width: '390px'}"> 
+<!--:breakpoints="{'960px': '75vw'}" :style="{width: '50vw'}"-->
+
+ <div class="form-registry">
+    
         <form class="p-fluid" @submit.prevent>
-          <div class="p-field p-col-12 p-md-4">
+          <div class="p-field mt-6 mb-5">
             <div class="p-float-label">
               <InputText
                 id="username"
@@ -17,7 +17,7 @@
               <label for="username">Имя пользователя</label>
             </div>
           </div>
-          <div class="p-field p-col-12 p-md-4">
+          <div class="p-field mb-5">
             <div class="p-float-label">
               <Password
                 id="password"
@@ -30,7 +30,7 @@
             </div>
           </div>
 
-          <div class="p-field p-col-12 p-md-4">
+          <div class="p-field mb-4">
             <span class="p-float-label">
               <Dropdown
                 v-model="selectedUnit"
@@ -43,10 +43,7 @@
                 :showClear="true"
               >
                 <template #value="slotProps">
-                  <div
-                    class="country-item country-item-value"
-                    v-if="slotProps.value"
-                  >
+                  <div v-if="slotProps.value">
                     <div>{{ slotProps.value.name_short }}</div>
                   </div>
                   <span v-else>
@@ -54,15 +51,13 @@
                   </span>
                 </template>
                 <template #option="slotProps">
-                  <div class="country-item">
                     <div>{{ slotProps.option.name_short }}</div>
-                  </div>
                 </template>
               </Dropdown>
             </span>
           </div>
 
-          <div class="p-field p-col-12 p-md-4">
+          <div class="p-field mb-4">
             <span class="p-float-label">
               <Dropdown
                 v-model="selectedExecutor"
@@ -75,10 +70,7 @@
                 :showClear="true"
               >
                 <template #value="slotProps">
-                  <div
-                    class="country-item country-item-value"
-                    v-if="slotProps.value"
-                  >
+                  <div v-if="slotProps.value">
                     <div>{{ slotProps.value.name }}</div>
                   </div>
                   <span v-else>
@@ -86,60 +78,70 @@
                   </span>
                 </template>
                 <template #option="slotProps">
-                  <div class="country-item">
                     <div>{{ slotProps.option.name }}</div>
-                  </div>
                 </template>
               </Dropdown>
             </span>
           </div>
           <Button
+           class="mb-4"
             icon="pi pi-sign-in"
             label=" Зарегистрировать "
-            @click="register"
+            @click="onRegister()"
           />
         </form>
       </div>
-    </div>
-  </div> 
+  </Dialog>
+
+<Button icon="pi pi-user-plus" 
+label="Добавить"
+class="p-button-rounded p-button-outlined p-button-primary p-mr-2" 
+@click="addUserDialog=true" />
+        </template>
 
 
-</template>
-
-<script>
-import Button from "primevue/button";
-import InputText from "primevue/inputtext";
+ <script> 
+import Dialog from 'primevue/dialog'
+import InputText from 'primevue/inputtext'
 import Password from "primevue/password";
-import { mapActions, mapMutations, mapState} from "vuex";
-import Dropdown from "primevue/dropdown";
+import Dropdown from 'primevue/dropdown'
+import Button from 'primevue/button'
+import { mapGetters, mapState, mapActions, mapMutations } from 'vuex';
+
 export default {
-  components: {
-    Button,
-    InputText,
-    Dropdown,
-    Password,
-  },
-
-   data() {
-    return {
-      username: null,
-      password: null,
-      selectedExecutor: null,
-      selectedUnit: null,  
-    };
-  },
-
-
-  computed: {
+       components: {
+           Dialog,
+           InputText,
+           Dropdown,
+           Button, 
+           Password,
+    
+       },
+	computed: {
     ...mapState(  
       {
       units: (state) => state.units.units,
       executors: (state) => state.executors.executors,
       registerUser: (state) => state.registerUser
-    })
-  },
+    }),
 
-  methods: {
+    
+    ...mapGetters(['users', 'errorStatus', 'errorMessage'])
+,
+  },
+	
+
+    data() {
+        return {
+      addUserDialog: false,
+      username: null,
+      password: null,
+      selectedExecutor: null,
+      selectedUnit: null, 
+        }
+    },
+	
+    methods: { 
     ...mapMutations({
       setUnit: "SET_UNIT",
       setRegisterUsername: "SET_REGISTER_USERNAME",
@@ -147,45 +149,28 @@ export default {
       setRegisterExecutor: "SET_REGISTER_EXECUTOR"
     }),
 
+  onRegister() {  
+      this.register()
+     .then(() => {
+            this.addUserDialog=false
+            this.$toast.add({severity:'success', summary:'Регистрация', detail:'Пользователь добавлен', 
+            life: 3000})} 
+        )
+        .catch(() => {
+             this.$toast.add({severity:'error', summary:'Ошибка' + ' ' + this.errorStatus, 
+             detail: this.errorMessage, life: 3000}) 
+        }
+        );    
+    
+  },
+
     ...mapActions({
       getUnits: "getUnits",
       getExecutors: "getExecutors",
       register: "register"
     }),
 
-    onRegistry() {
-      this.$toast.add({
-        severity: "success",
-        summary: "Регистрация",
-        detail: "Успешно",
-        life: 3000,
-      });
-    },
   },
 
-  created() 
-  { 
-      this.getUnits(),
-      this.getExecutors()
-  }
-};
-</script>
-
-<style lang="scss" scoped>
-.form-registry {
-  .card {
-    width: 25rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-
-    form {
-      margin-top: 2rem;
-    }
-
-    .p-field {
-      margin-bottom: 2rem;
-    }
-  }
 }
-</style>
+</script>

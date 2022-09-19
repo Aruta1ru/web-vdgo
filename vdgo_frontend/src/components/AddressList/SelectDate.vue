@@ -6,8 +6,9 @@
           <div>
             <h3 class="block text-500 font-medium mb-3"> Дата </h3>
             <div class="text-900 font-medium text-xl"> 
-        <Calendar @date-select="setDate(this.date)" style="width: 12em"  v-model="date" :monthNavigator="true" :yearNavigator="true" 
-        yearRange="2019:2023"  :showIcon="true" :showButtonBar="true" autocomplete="off"/>
+        <Calendar 
+        @date-select="setDate(this.date)" style="width: 12em"  v-model="date" :monthNavigator="true" :yearNavigator="true" 
+       yearRange="2019:2023" :showIcon="true" :showButtonBar="true" autocomplete="off"/>
   </div>
             </div>
               </div> 
@@ -16,6 +17,7 @@
               <span class="text-blue-500 text-base" v-if="selectedDateTxt"> {{selectedDateTxt}} </span> 
               <span class="text-orange-500 text-base" v-else> - </span>
     </div>
+
 </div> 
 </template>
 
@@ -40,19 +42,11 @@ data () {
 
 
 computed: {
-  ...mapGetters({
-    bypassCount: "bypassCount",
-    selectedDateTxt: "selectedDateTxt"
-  })
+  ...mapGetters(['bypassCount','selectedDateTxt'])
 },
 
-
 methods: {
-    ...mapActions({
-    setDate: "setDate"
-  })
+    ...mapActions(['setDate'])
 }
-
 }
-
-</script>
+</script> 

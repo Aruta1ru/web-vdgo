@@ -29,7 +29,7 @@ export default {
   }, 
 
 
-  created() {
+    created() {  
     this.$http.interceptors.response.use(undefined, function (err) {
       return new Promise( () => {
         if (err.status == 401 && err.config && !err.config.__isRetryRequest) {

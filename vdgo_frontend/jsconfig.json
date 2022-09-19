@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",
+    "jsx": "preserve", // убирает ошибку рабочей области TypeScript intellisense is disabled on template, you can config jsx preverse
     "baseUrl": "./",
     "moduleResolution": "node",
     "paths": {

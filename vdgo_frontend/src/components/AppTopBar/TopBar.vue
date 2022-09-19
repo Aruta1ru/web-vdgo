@@ -7,14 +7,15 @@
 
 		
 		<div v-if="isLoggedIn" class="layout-topbar-menu lg:flex origin-top">
-			<span>
+
+			<span> 
 				<button @click="showProfile" class="p-link layout-topbar-button">
-					<i class="pi pi-user"></i>
+        <AvatarUser/>
 					<span> Профиль </span>
 				</button>
 			</span>
       <span>
-<button @click="logout" class="p-link layout-topbar-button">
+<button @click="onLogout" class="p-link layout-topbar-button">
           <i class="pi pi-sign-out"></i>
           <span> Выйти </span>
         </button>
@@ -42,10 +43,12 @@
 <script>
 import OverlayPanel from "primevue/overlaypanel";
 import logo from "@/assets/images/logo.png";
-import { mapGetters} from "vuex";
+import AvatarUser from './AvatarUser.vue'
+import { mapActions, mapGetters} from "vuex";
 export default {
   components: {
     OverlayPanel,
+    AvatarUser
   },
 
   data() {
@@ -54,35 +57,26 @@ export default {
     };
   },
 
-  methods: {
-    logout() {
-      this.$store.dispatch("logout").then(() => this.$router.push("/login"));
+  computed: {
+    ...mapGetters([
+     'isLoggedIn', 'isAdmin', 'roleText', 'userProfile']),
+  }, 
+
+  methods: { 
+
+  ...mapActions(['logout']),
+
+    onLogout() {
+      this.logout()
+      .then(() => this.$router.go("/login"));
     },
 
     showProfile(event) {
       this.$refs.profilePanel.toggle(event);
-    },
+    }
 
-  },
-
-  computed: {
-    ...mapGetters({
-      isLoggedIn: "isLoggedIn",
-      roleText: "roleText",
-      userProfile:"userProfile"
-    }),
-  },
-  
+  },  
+ 
 }
+
 </script>
-
-<style lang="scss" scoped>
-.layout-topbar-icons {
-    float: right;
-    display: block;
-    animation-duration: .5s;
-}
-</style>
-
-
-

@@ -1,5 +1,5 @@
 
-import { GET_IMAGES, POST_IMAGE} from '../mutation-types.js'
+import { GET_IMAGES, POST_IMAGE, REMOVE_IMAGE} from '../mutation-types.js'
 import axios from 'axios'
 export default {
 
@@ -17,11 +17,15 @@ mutations:{
       },
     [POST_IMAGE] (state, newPhoto) {
         state.images.push(newPhoto)
-      }
+      },
+
+   [REMOVE_IMAGE] (state, id) {
+        state.images = state.images.filter(image => image.id !== id);
+    } 
   },
 
 actions: {
-      async getImages({ commit, dispatch, rootState}) { 
+      async getImages({ commit,dispatch, rootGetters}) { 
         dispatch('showLoadingSpinner')
         try {
           const response = await axios.get(
@@ -29,7 +33,7 @@ actions: {
             {
               params: {
                 file_category: 0,
-                object: rootState.vdgoObject.vdgoObject.id,
+                object: rootGetters.idObject,
               },
             }
           );
@@ -38,44 +42,47 @@ actions: {
         } catch (e) {
           console.log(e);
           dispatch('hideLoadingSpinner')
+          alert('Ошибка' + ' ' + e.response.status 
+            + ' ' + e.message) ;
         }
       }, 
 
-      deletePhoto({dispatch},id) {
+      deletePhoto({commit, dispatch},id) {
         return new Promise((resolve, reject) => {
         axios({url: `http://127.0.0.1:8000/api/v1/files/${id}/`, 
          method: 'DELETE' })
         .then(response => {
-            dispatch('getImages')
-            resolve(response) 
+          commit('REMOVE_IMAGE', id)
+          resolve(response) 
             
         })
         .catch(err => {
+          dispatch('catchError', err) 
             reject(err)
         })
         })
     }, 
 
-    uploadPhoto({dispatch, commit, rootState}, newPhoto) {
+   uploadPhoto({dispatch, commit, rootGetters}, newPhoto) {
       return new Promise((resolve, reject) => {
-      axios({url: `http://127.0.0.1:8000/api/v1/vdg_objects/${rootState.vdgoObject.vdgoObject.id}/load_files/`, 
+      axios({url: `http://127.0.0.1:8000/api/v1/vdg_objects/${rootGetters.idObject}/load_files/`, 
       data: newPhoto,
        method: 'POST' })
-      .then(response => {
+      .then(response => { 
           commit('POST_IMAGE', newPhoto)
-          dispatch('getImages')
-          resolve(response) 
-          
+          dispatch('getImages') 
+          resolve(response)
       })
       .catch(err => {
+        dispatch('catchError', err) 
           reject(err)
       })
       })
   },
 
-    downloadPhoto ({rootState}, filename) {
+    downloadPhoto ({rootGetters, dispatch}, filename) {
       axios({
-        url: require(`../../../../vdgo_backend/media/${rootState.vdgoObject.vdgoObject.id}/${filename}`),
+        url: require(`../../../../vdgo_backend/media/${rootGetters.idObject}/${filename}`),
         method: 'GET',
         responseType: 'blob',
       })
@@ -86,6 +93,9 @@ actions: {
         link.setAttribute('download', filename)
         document.body.appendChild(link)
         link.click()
+      })
+      .catch(err => {
+        dispatch('catchError', err)
       })
     }
   }

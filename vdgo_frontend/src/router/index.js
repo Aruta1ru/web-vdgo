@@ -6,45 +6,37 @@ const UploadITD = () => import('../views/UploadITD.vue')
 const ClientPage = () => import('../views/ClientPage.vue')
 const EquipmentPage = () => import('../views/EquipmentPage.vue')
 const LoginPage = () => import('../views/LoginPage.vue')
-const RegistryPage = () => import('../views/RegistryPage.vue')
 const TabMenu = () => import('../views/TabMenu.vue')
 const NotFound = () => import('../views/NotFound.vue')
-const accessDenied = () => import('../views/accessDenied.vue')
 
-const routes = [
+const routes = [ 
+
   {
     path:'/login',
     name: 'LoginPage',
     component: LoginPage
   }, 
 
-  { 
-    path: '/registry',
-    name: 'RegistryPage',
-    component: RegistryPage,
-    beforeEnter: (to, from, next) => {
-      if (store.getters.isAdmin) {
-        next()
-      } else {
-        next('accessDenied') //переадресация на accessDenied, если это USER
-      }
-    },
-    meta: { 
-      requiresAuth: true
-    }
-  },
-
   {
     path: '/',
     name: 'HomePage',
     component: HomePage,
     meta: { 
-      requiresAuth: true,
+      requiresAuth: true
     }
   }, 
 
   {
     path:'/tabs/',
+    beforeEnter: (to, from, next) => {
+      if (store.getters.isAdmin) {
+        next('/')
+      } else {
+        next()
+      }
+    } // если авторизация выполнена под админом, то данные маршруты будут недоступны и выполнится 
+      // возврат на главную к списку пользователей
+    ,
     redirect:'/tabs/client',
     name: 'TabMenuPage',
     component: TabMenu,
@@ -75,20 +67,13 @@ const routes = [
       }
     ]
   },
-
+  
   { 
     path: '/:pathMatch(.*)*', 
     name:'404',
     component: NotFound 
   }, // Страница 404
   
-  
-  { 
-    path: '/accessDenied', 
-    name:'accessDenied',
-    component: accessDenied 
-  } // Страница недостаточно прав для регистрации пользователя  
-
 ]
 
 const router = createRouter({ 
@@ -100,17 +85,17 @@ const router = createRouter({
   routes
 })
 
-
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
+    if (store.getters.isLoggedIn) { 
       next()
       return
     }
     next('/login')
-  } else {
+  } else { 
     next()
   }
+
 })
 
 export default router

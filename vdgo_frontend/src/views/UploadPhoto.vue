@@ -6,17 +6,22 @@
 </template>
 
 <script>
-// @ is an alias to /src
+
 import UploaderPhoto from '@/components/Photo/UploaderPhoto.vue'
+import { mapActions } from 'vuex'
 export default {
   name: 'UploadPhoto',
   components: {
     UploaderPhoto
    
+  }, 
+
+  methods: {
+    ...mapActions(['getImages'])
   },
 
-  created () {
-    this.$store.dispatch('getImages') 
+  created() {
+    this.getImages()
   }
 }
 </script>

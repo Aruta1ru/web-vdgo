@@ -43,10 +43,7 @@
                 :showClear="true"
               >
                 <template #value="slotProps">
-                  <div
-                    class="country-item country-item-value"
-                    v-if="slotProps.value"
-                  >
+                  <div v-if="slotProps.value">
                     <div>{{ slotProps.value.name_short }}</div>
                   </div>
                   <span v-else>
@@ -54,9 +51,7 @@
                   </span>
                 </template>
                 <template #option="slotProps">
-                  <div class="country-item">
                     <div>{{ slotProps.option.name_short }}</div>
-                  </div>
                 </template>
               </Dropdown>
             </span>
@@ -75,10 +70,7 @@
                 :showClear="true"
               >
                 <template #value="slotProps">
-                  <div
-                    class="country-item country-item-value"
-                    v-if="slotProps.value"
-                  >
+                  <div v-if="slotProps.value">
                     <div>{{ slotProps.value.name }}</div>
                   </div>
                   <span v-else>
@@ -86,9 +78,7 @@
                   </span>
                 </template>
                 <template #option="slotProps">
-                  <div class="country-item">
                     <div>{{ slotProps.option.name }}</div>
-                  </div>
                 </template>
               </Dropdown>
             </span>
@@ -151,16 +141,8 @@ export default {
       getUnits: "getUnits",
       getExecutors: "getExecutors",
       register: "register"
-    }),
+    })
 
-    onRegistry() {
-      this.$toast.add({
-        severity: "success",
-        summary: "Регистрация",
-        detail: "Успешно",
-        life: 3000,
-      });
-    },
   },
 
   created() 
@@ -171,21 +153,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.form-registry {
-  .card {
-    width: 25rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
 
-    form {
-      margin-top: 2rem;
-    }
-
-    .p-field {
-      margin-bottom: 2rem;
-    }
-  }
-}
-</style>

@@ -35,9 +35,11 @@ actions: {
         resolve(response)
     })
     .catch(err => {
+      alert('Ошибка' + ' ' + err.response.status 
+            + ' ' + err.message) ;
         reject(err)
     })
     })
-  },
+  }
 }      
 }

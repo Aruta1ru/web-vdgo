@@ -13,7 +13,7 @@
   <DataTable 
   :value="equipment" 
   responsiveLayout="stack" 
-  breakpoint="800px" 
+  breakpoint="700px" 
   :paginator="true" 
   :rows="10" 
   v-model:filters="filters" 
@@ -25,20 +25,15 @@
                 <Column bodyStyle="width:12%" field="equipment_model.name" header="Модель" :sortable="true"></Column>
                 <Column bodyStyle="width:9%" field="quantity" header="Количество" :sortable="true"></Column>
                 <Column bodyStyle="width:7%" field="part" header="Доля" :sortable="true"></Column>
-                
-                       </DataTable> 
-
-<!--Когда будет редактирование параметров оборудования вставить после 
-<Column field="part" header="Доля" :sortable="true"></Column>, 
-вот такой кусок кода для открытия модального окна с параметрами
-<Column :exportable="false" style="min-width:8rem">
-                    <template #body>
-    <DialogEdit />
+        
+        <!--МОДАЛЬНОЕ ОКНО С ПАРАМЕТРАМИ ОБОРУДОВАНИЯ-->
+        <!---<Column :exportable="false" style="min-width:8rem">
+                    <template #body="slotProps">
+                <DialogEdit :equipmentType = slotProps.data.type.name />
                     </template>
-                </Column>-->
+                </Column> -->
 
-
-
+                       </DataTable> 
                        </div> 	
 </template>
 
@@ -61,19 +56,18 @@ export default {
   },
   
 created() {
- this.initFilters();
-        
+ this.initFilters();  
     },
 
-computed: mapGetters({
-    'equipment': 'equipment'
-    }),
+computed: mapGetters(['equipment']),
 
 data() {
         return {
          filters:{}
         }},
+        
 methods: {
+
         initFilters() {
             this.filters = {
                 'global': {value: null, matchMode: FilterMatchMode.CONTAINS}
@@ -81,10 +75,4 @@ methods: {
                     },
 
 }
-</script>              
-
-
-    
-<style lang="scss" scoped>
- 
-</style>
+</script>      
