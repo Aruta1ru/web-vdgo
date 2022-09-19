@@ -3,7 +3,7 @@
 <div class="card"> 
 
  <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-						<h2 class="p-mb-2 p-m-md-0 p-as-md-center"> Оборудование </h2>
+						<h2 class="p-mb-2 p-m-md-0 p-as-md-center text-900 font-medium text-xl"> Оборудование </h2>
 						<span class="p-input-icon-left">
                             <i class="pi pi-search p-input-icon-left" />
                             <InputText style="width: 10em" v-model="filters['global'].value" placeholder="Поиск" />
@@ -13,24 +13,27 @@
   <DataTable 
   :value="equipment" 
   responsiveLayout="stack" 
-  breakpoint="800px" 
+  breakpoint="700px" 
   :paginator="true" 
   :rows="10" 
   v-model:filters="filters" 
   dataKey="id"
   class="p-datatable-sm">
                
-                <Column field="type" header="Тип" :sortable="true"></Column>
-                <Column field="brand" header="Изготовитель" :sortable="true"></Column>
-                <Column field="model" header="Модель" :sortable="true"></Column>
-                <Column field="quantity" header="Количество" :sortable="true"></Column>
-                <Column field="percent" header="Доля" :sortable="true"></Column>
-                <Column :exportable="false" style="min-width:8rem">
-                    <template #body>
-    <DialogEdit />
+                <Column bodyStyle="width:60%" field="type.name" header="Тип" :sortable="true"></Column>
+                <Column bodyStyle="width:12%" field="manufacturer.name" header="Изготовитель" :sortable="true"></Column>
+                <Column bodyStyle="width:12%" field="equipment_model.name" header="Модель" :sortable="true"></Column>
+                <Column bodyStyle="width:9%" field="quantity" header="Количество" :sortable="true"></Column>
+                <Column bodyStyle="width:7%" field="part" header="Доля" :sortable="true"></Column>
+        
+        <!--МОДАЛЬНОЕ ОКНО С ПАРАМЕТРАМИ ОБОРУДОВАНИЯ-->
+        <!---<Column :exportable="false" style="min-width:8rem">
+                    <template #body="slotProps">
+                <DialogEdit :equipmentType = slotProps.data.type.name />
                     </template>
-                </Column>
-                       </DataTable>
+                </Column> -->
+
+                       </DataTable> 
                        </div> 	
 </template>
 
@@ -41,46 +44,35 @@ import { FilterMatchMode } from 'primevue/api';
 import Column from 'primevue/column' 
 import InputText from 'primevue/inputtext' 
 import { mapGetters } from 'vuex'
-import DialogEdit from './DialogEdit.vue'
+//import DialogEdit from './DialogEdit.vue'
 export default {
 
   components:{
   DataTable,
   Column,
   InputText,
-  DialogEdit
+  //DialogEdit
 
   },
-  created() {
-        
- this.initFilters();
-        
+  
+created() {
+ this.initFilters();  
     },
 
 computed: mapGetters(['equipment']),
+
 data() {
         return {
          filters:{}
         }},
+        
 methods: {
+
         initFilters() {
             this.filters = {
                 'global': {value: null, matchMode: FilterMatchMode.CONTAINS}
                     }}            
                     },
 
-beforeMount () {
-    this.$store.dispatch('getEquipment')
-  }
 }
-</script>              
-
-
-<!--Медиазапрос, который уменьшает размер шрифта в таблице, при отображении на мобильном устройстве-->
-<style lang="scss" scoped>
- @media screen and (max-width: 500px) {
-        .p-datatable {
-            font-size: 0.8rem
-        }
-    }
-</style>
+</script>      

@@ -1,0 +1,19 @@
+@media screen and (max-width:500px) {
+    .p-datatable .p-datatable-tbody > tr > td { 
+        text-align: left;
+        border: 1px solid #e9ecef;
+        border-width: 0 0 5px 0;
+        padding: 1rem 1rem; 
+        display: block !important; 
+        letter-spacing: 1px;
+        
+
+        .p-column-title {
+            display: block;
+            text-align: left;
+            text-transform: uppercase ; 
+            margin-bottom:2px;
+            margin-top:2px;      
+        } 
+    }
+}

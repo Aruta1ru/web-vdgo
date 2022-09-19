@@ -1,4 +1,4 @@
-import { GET_UNITS } from '../mutation-types'
+import { GET_UNITS } from '../mutation-types.js'
 import axios from 'axios'
 
 export default {

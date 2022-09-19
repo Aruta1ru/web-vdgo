@@ -5,7 +5,7 @@
 
 <div class="p-field">
                 <label for="name">Тип</label>
-                <InputText id="name" v-model.trim="product.name" disabled />
+                <InputText id="name" :placeholder="equipmentType" disabled />
             </div>
 
 
@@ -162,7 +162,7 @@
 
             <template #footer>
                 <Button label="Предыдущие значения" icon="pi pi-directions-alt" class="p-button-text"/>
-                <Button label="Сохранить" icon="pi pi-check" class="p-button-text" @click="saveProduct" />
+                <Button label="Сохранить" icon="pi pi-check" class="p-button-text" />
             </template>
         </Dialog> 
 
@@ -194,6 +194,9 @@ export default {
            Button,
            InputMask, SelectButton
        },
+	
+	props: ['equipmentType'],
+
     data() {
         return {
             editDialog: false,

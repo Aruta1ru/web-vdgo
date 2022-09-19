@@ -1,70 +1,70 @@
 <template>
             <div class="card"> 
                 <div class="table-header p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
-						<h2 class="p-mb-2 p-m-md-0 p-as-md-center"> Инженерно-техническая документация </h2>
+					<h2 class="p-mb-2 p-m-md-0 p-as-md-center text-900 font-medium text-xl"> Инженерно-техническая документация </h2>
                     </div>
-            <div class="flex justify-content-between mb-3">
+           
                 
-               <FileUpload 
-                name="demo[]" 
-                url="./upload.php" 
-                mode="basic"
-                @upload="onUpload" 
-                :multiple="true" 
-                accept="application/pdf, application/msword" 
-                :maxFileSize="1000000"
-                chooseLabel="Добавить"
-                >
-                </FileUpload>
-                <!--Если в FileUpload добавить :auto="true" загрузка файлов будет происходить сразу после нажатия 
-                кнопки Выбрать в окне выбора файлов-->
-
-              </div>
+<FormKit type="form" 
+submit-label="Загрузить"
+@submit="uploadDocuments">
+<FormKit  v-model="files" type="file" label="Выбор документации для загрузки" 
+name="files" accept=".pdf" multiple />
+</FormKit>   
               
-            <div v-if="itd" >
-			<div v-for="(itdFile, id) of itd" :key="id"> 
-                
-<ul class="list-none p-0 m-0"> 
-				<li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4 border-bottom-1 py-2 surface-border">
-					<div>
-						<span class="text-900 font-medium mr-2 mb-1 md:mb-0">
-                            <a href=''>{{itdFile.name}}</a>
-                            </span> 
-					</div>
-                  <div class="mt-2 md:mt-0 flex align-items-end">
-						<Button icon="pi pi-times" class="p-button-outlined p-button-danger p-button-rounded" /> 
-					</div>  
-				</li> 
-			</ul>
+<ITDList/>
             </div> 
-		</div>
-                </div> 
-
-
-
 </template>
 
 <script> 
-import FileUpload from 'primevue/fileupload'
-import Button from 'primevue/button'
-import { mapGetters } from 'vuex'
+
+
+
+import { mapActions, mapGetters } from 'vuex'
+import ITDList from './ITDList.vue'
+
+
 export default { 
     components: {
-        FileUpload,
-        Button
-    },
-    computed: mapGetters(['itd']), 
-    
-    methods: {
-        onUpload() {
-            this.$toast.add({severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000});
-        }
-    },
-    beforeMount () { 
-    this.$store.dispatch('getITD')
-  }
-    
+    ITDList
+},
 
-}
+    data() {
+        return {
+            files: []
+         }
+    },
+
+    computed: mapGetters(['idObject', 'bypassDate', 'errorStatus', 'errorMessage']),
+
+    methods: { 
+
+        ...mapActions(['uploadITD']),
+
+  async uploadDocuments (data) {  
+      await new Promise((r) => setTimeout(r, 1000))
+        let fd = new FormData()
+        data.files.forEach((fileItem) => {
+        let category = 1;     
+        fd.append('files', fileItem.file)
+        fd.append("file_category", category)
+        fd.append("object", this.idObject )
+        fd.append("bypass_date", this.bypassDate)
+        }) 
+        this.uploadITD(fd)
+        .then(() => { 
+                  this.files = []  
+                  this.$toast.add({severity:'success', summary:'Загрузка документации', detail:'Загружено', life: 3000});
+                  
+            })
+        .catch(() => {
+              this.$toast.add({severity:'error', summary:'Ошибка' + ' ' + this.errorStatus, 
+             detail: this.errorMessage, life: 5000})
+             })
+    }   
+    },
+    }
+   
+
 </script> 
 

@@ -1,4 +1,4 @@
-import { GET_EXECUTORS, SET_UNIT } from '../mutation-types'
+import { GET_EXECUTORS, SET_UNIT } from '../mutation-types.js'
 import axios from 'axios'
 
 export default {
@@ -35,9 +35,11 @@ actions: {
         resolve(response)
     })
     .catch(err => {
+      alert('Ошибка' + ' ' + err.response.status 
+            + ' ' + err.message) ;
         reject(err)
     })
     })
-  },
+  }
 }      
 }

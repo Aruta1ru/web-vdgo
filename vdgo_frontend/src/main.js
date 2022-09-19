@@ -1,12 +1,16 @@
 import { createApp } from 'vue'
-
-import store from "./store";
-import router from "./router";
-import Axios from 'axios';
 import App from './App.vue'
-
+import { plugin, defaultConfig } from '@formkit/vue'
+import '@formkit/themes/genesis'
+import { ru } from '@formkit/i18n'
+import axios from 'axios';
+import store  from "./store/index.js";
+import router  from "./router/index.js";
 import PrimeVue from 'primevue/config';
-import 'primevue/resources/themes/saga-blue/theme.css';
+//import 'primevue/resources/themes/mdc-light-indigo/theme.css';
+//import 'primevue/resources/themes/tailwind-light/theme.css';
+import 'primevue/resources/themes/lara-light-blue/theme.css';
+//import 'primevue/resources/themes/saga-blue/theme.css';
 import 'primevue/resources/primevue.css';
 import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css'; 
@@ -16,9 +20,9 @@ import ToastService from 'primevue/toastservice'
 import StyleClass from 'primevue/styleclass';
 const app = createApp(App)
 
-
-app.config.globalProperties.$http = Axios;
-
+app.config.debug = true;
+app.config.devtools = true;
+app.config.globalProperties.$http = axios;
 const token = localStorage.getItem('token')
 if (token) {
     app.config.globalProperties.$http.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -38,13 +42,17 @@ app.use(PrimeVue,
            clear:'Очистить' }
         }, 
     
-    {ripple: false}, 
+    { ripple: false }, 
 );
 
-app.use(router);
-app.use(store);
-app.use(ToastService)
+app.use(router)
+app.use(store)
+
 app.directive('badge', BadgeDirective);
 app.directive('styleclass', StyleClass);
+app.use(ToastService)
+app.use(plugin, defaultConfig({
+    locales: { ru },
+    locale: 'ru',
+}) )
 app.mount('#app')
-

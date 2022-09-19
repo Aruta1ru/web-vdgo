@@ -1,35 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import UploadPhoto from '../views/UploadPhoto.vue'
-import UploadITD from '../views/UploadITD.vue'
-import Client from '../views/Client.vue'
-import Equipment from '../views/Equipment.vue'
-import LoginPage from '../views/LoginPage.vue'
-import RegistryPage from '../views/RegistryPage.vue'
-import TabMenu from '../views/TabMenu.vue'
-import NotFound from '../views/NotFound.vue'
-import store from '../store'
+import  store  from '../store/index.js'
+const HomePage = () => import('../views/HomePage.vue')
+const UploadPhoto = () => import('../views/UploadPhoto.vue')
+const UploadITD = () => import('../views/UploadITD.vue')
+const ClientPage = () => import('../views/ClientPage.vue')
+const EquipmentPage = () => import('../views/EquipmentPage.vue')
+const LoginPage = () => import('../views/LoginPage.vue')
+const TabMenu = () => import('../views/TabMenu.vue')
+const NotFound = () => import('../views/NotFound.vue')
 
-const routes = [
+const routes = [ 
+
   {
     path:'/login',
     name: 'LoginPage',
     component: LoginPage
   }, 
 
-  { 
-    path: '/registry',
-    name: 'RegistryPage',
-    component: RegistryPage,
-    meta: { 
-      requiresAuth: true
-    }
-  },
-
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'HomePage',
+    component: HomePage,
     meta: { 
       requiresAuth: true
     }
@@ -37,8 +28,17 @@ const routes = [
 
   {
     path:'/tabs/',
+    beforeEnter: (to, from, next) => {
+      if (store.getters.isAdmin) {
+        next('/')
+      } else {
+        next()
+      }
+    } // если авторизация выполнена под админом, то данные маршруты будут недоступны и выполнится 
+      // возврат на главную к списку пользователей
+    ,
     redirect:'/tabs/client',
-    name: 'TabMenu',
+    name: 'TabMenuPage',
     component: TabMenu,
     meta: { 
       requiresAuth: true
@@ -47,13 +47,13 @@ const routes = [
     children: [
       {
         path: 'client',
-        name: 'Client',
-        component: Client
+        name: 'ClientPage',
+        component: ClientPage
       }, 
       {
         path:'equipment',
-        name: 'Equipment',
-        component: Equipment
+        name: 'EquipmentPage',
+        component: EquipmentPage
       }, 
       {
         path:'gallery',    
@@ -67,30 +67,35 @@ const routes = [
       }
     ]
   },
-
+  
   { 
     path: '/:pathMatch(.*)*', 
     name:'404',
     component: NotFound 
-  } // Страница 404  
+  }, // Страница 404
+  
 ]
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+const router = createRouter({ 
+  history: createWebHistory(),
+  scrollBehavior() {
+    // всегда при переходе будет возврат к верхушке страницы
+    return { top: 0 }
+  },
   routes
 })
 
-
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.isLoggedIn) {
+    if (store.getters.isLoggedIn) { 
       next()
       return
     }
     next('/login')
-  } else {
+  } else { 
     next()
   }
+
 })
 
 export default router

@@ -2,7 +2,7 @@ django==3.0
 mssql-django==1.0b1
 django-environ==0.4.5
 django-filter==2.4.0
-djangorestframework-simlejwt==4.7.1
+djangorestframework-simplejwt==5.2.0
 djangorestframework==3.12.4
 django-cors-headers==3.7.0
 drf_yasg
